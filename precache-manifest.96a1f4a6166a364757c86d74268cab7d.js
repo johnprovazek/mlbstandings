@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "67fbc9ab44430385bdfa",
+    "revision": "78dbf5688f82361028b3",
     "url": "/mlbstandings/static/css/main.09284cb9.chunk.css"
   },
   {
-    "revision": "67fbc9ab44430385bdfa",
-    "url": "/mlbstandings/static/js/main.67fbc9ab.chunk.js"
+    "revision": "78dbf5688f82361028b3",
+    "url": "/mlbstandings/static/js/main.78dbf568.chunk.js"
   },
   {
     "revision": "03ae7ea834bbe7645a20",
@@ -24,7 +24,7 @@ self.__precacheManifest = [
     "url": "/mlbstandings/static/media/logo.06e73328.svg"
   },
   {
-    "revision": "a688c94a892c1289f08583680dcf263a",
+    "revision": "619c2ce88f4a961b4ced67e401a925bc",
     "url": "/mlbstandings/index.html"
   }
 ];

@@ -1,7 +1,7 @@
 {
   "main.css": "/mlbstandings/static/css/main.09284cb9.chunk.css",
-  "main.js": "/mlbstandings/static/js/main.67fbc9ab.chunk.js",
-  "main.js.map": "/mlbstandings/static/js/main.67fbc9ab.chunk.js.map",
+  "main.js": "/mlbstandings/static/js/main.78dbf568.chunk.js",
+  "main.js.map": "/mlbstandings/static/js/main.78dbf568.chunk.js.map",
   "static/js/1.03ae7ea8.chunk.js": "/mlbstandings/static/js/1.03ae7ea8.chunk.js",
   "static/js/1.03ae7ea8.chunk.js.map": "/mlbstandings/static/js/1.03ae7ea8.chunk.js.map",
   "static/js/2.e495a233.chunk.js": "/mlbstandings/static/js/2.e495a233.chunk.js",
@@ -11,6 +11,6 @@
   "static/media/logo.svg": "/mlbstandings/static/media/logo.06e73328.svg",
   "static/css/main.09284cb9.chunk.css.map": "/mlbstandings/static/css/main.09284cb9.chunk.css.map",
   "index.html": "/mlbstandings/index.html",
-  "precache-manifest.01e2d05c07f22afa447510e32d95704e.js": "/mlbstandings/precache-manifest.01e2d05c07f22afa447510e32d95704e.js",
+  "precache-manifest.96a1f4a6166a364757c86d74268cab7d.js": "/mlbstandings/precache-manifest.96a1f4a6166a364757c86d74268cab7d.js",
   "service-worker.js": "/mlbstandings/service-worker.js"
 }
