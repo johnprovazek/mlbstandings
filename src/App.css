@@ -14,7 +14,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: white;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,7 +25,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: white;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +35,198 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+/* Things I added */
+
+@media only screen and (min-width: 1281px){
+  #chartContainer{
+    width: 60vw;
+    height: 30vw;
+  }
+  #chartTitle {
+    font-size: 1.5rem;
+    line-height: 3vw;
+    height: 10%;
+    text-align: center;
+  }
+  .teamLogo{
+    width: 38.4px;
+    height: 38.4px;
+    /* width: 1px;
+    height: 1px; */
+  }
+}
+@media only screen and (max-width: 1280px) {
+  #chartContainer{
+    width: min(768px,96vw);
+    height: min(384px,48vw);
+  }
+  #chartTitle {
+    line-height: min(38.4px,4.8vw);
+  }
+  .teamLogo{
+    /* width: 25.5938px;
+    height: 25.5938px; */
+    width: min(38.4px,4vw);
+    height: min(38.4px,4vw);
+  }
+}
+@media only screen and (min-width: 1025px) and (max-width: 1280px) {
+  #chartTitle {
+    font-size: 1.5rem;
+  }
+}
+@media only screen and (min-width: 651px) and (max-width: 1024px) {
+  #chartTitle {
+    font-size: 1.2rem;
+  }
+}
+@media only screen and (min-width:500px) and (max-width: 650px) {
+  #chartTitle {
+    font-size: 1.0rem;
+  }
+}
+@media only screen and (max-width: 499px) {
+  #chartTitle {
+    font-size: 0.8rem;
+  }
+}
+
+#chartContainer{
+  display: block;
+  margin: auto;
+  padding: 1vw;
+  background-color: white;
+  border: thin solid white;
+  border-radius: 4px;
+}
+
+#googleChartContainer{
+  width: 100%;
+  height: 90%;
+  position: relative;
+}
+
+#standingsContainer{
+  display: inline-block;
+  margin-right: 2rem;
+}
+
+#divisionContainer{
+  display: inline-block;
+}
+
+#dropdownContainer{
+  margin-bottom: 2rem;
+}
+
+select {
+  /* styling */
+  color: black;
+  background-color: white;
+  border-color: white;
+  border: thin solid white;
+  border-radius: 4px;
+  display: inline-block;
+  font: inherit;
+  line-height: 1.5rem;
+  padding: 0.5rem 3.5em 0.5rem 1em;
+  /* reset */
+  margin: 0;      
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select.minimal {
+  background-image:
+    linear-gradient(45deg, transparent 50%, #EAEAEA 50%),
+    linear-gradient(135deg, #EAEAEA 50%, transparent 50%),
+    linear-gradient(to right, #EAEAEA, #EAEAEA);
+  background-position:
+    calc(100% - 20px) calc(1em + 2px),
+    calc(100% - 15px) calc(1em + 2px),
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+}
+
+select.minimal:focus {
+  background-image:
+    linear-gradient(45deg, black 50%, transparent 50%),
+    linear-gradient(135deg, transparent 50%, black 50%),
+    linear-gradient(to right, #EAEAEA, #EAEAEA);
+  background-position:
+    calc(100% - 15px) 1em,
+    calc(100% - 20px) 1em,
+    calc(100% - 2.5em) 0.5em;
+  background-size:
+    5px 5px,
+    5px 5px,
+    1px 1.5em;
+  background-repeat: no-repeat;
+  border-color: white;
+  outline: 0;
+}
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+body {
+  background-color: white;
+  font: bold 1em/100% "Helvetica Neue", Arial, sans-serif;
+  padding: 2rem 0;
+  text-align: center;
+}
+#maintitle {
+  color: white;
+  line-height: 2rem;
+  font-size: 2rem;
+  margin: 0 auto 1rem auto;
+  max-width: 30rem;
+}
+.dropdownTitle {
+  color: white;
+  line-height: 2.5rem;
+  font-size: 1.5rem;
+  margin-top:0;
+  margin-bottom:0;
+}
+
+#chartTitle {
+  color: black;
+  /* line-height: 2.5rem; */
+  margin-top:0;
+  margin-bottom:0;
+  /* height: 10%; */
+}
+
+a{
+  color: white;
+}
+
+#dataDisclaimer{
+  color: white;
+  line-height: 1.5rem;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+.whiteHat {
+
+}
+
+.teamLogo{
+  display:none;
+  border: none;
+  position: absolute;
 }
