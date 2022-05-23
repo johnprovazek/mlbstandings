@@ -146,7 +146,7 @@ class App extends Component{
             var squareWidth = teamLogo.clientWidth
             console.log(xPos + ", " + yPos + ", " + squareWidth)
             // console.log(squareWidth)
-            teamLogo.src = "../logos/" + team_name_array[i] +".svg";
+            teamLogo.src = "./logos/" + team_name_array[i] +".svg";
             // teamLogo.src = "../logos/red.png";
             // teamLogo.style.width = "1px";
             // teamLogo.style.height = "1px";
