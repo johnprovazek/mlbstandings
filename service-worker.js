@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/mlbstandings/precache-manifest.4d1d0659577f899941a16f3e1af4cbdf.js"
+  "/mlbstandings/precache-manifest.b963b15d2210bb1b7f363a7a21f37adc.js"
 );
 
 workbox.clientsClaim();
