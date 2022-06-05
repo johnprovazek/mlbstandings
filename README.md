@@ -12,4 +12,5 @@ Built using React, Google Charts, and Google Firebase Firestore. A Python script
 - Improve the overlapping team icons.
 - Add dashed lines when teams overlap.
 - Add more historic data.
+- Fix mobile issue where the axis values aren't showing up.
 - Use a linter and a style guide.
