@@ -1,8 +1,10 @@
 import "./App.css";
-import React,{useRef,Component} from "react";
+import {React,Component} from "react";
 import {db} from "./firebase"
 import {doc, getDoc} from "firebase/firestore";
 import {Chart} from "react-google-charts";
+
+var current_year = new Date().getFullYear()
 
 class App extends Component{
   constructor(props) {
@@ -50,9 +52,10 @@ class App extends Component{
           }
         } 
       },
-      season: '2022',
+      season: '2023',
       division: 'NLC',
       seasons_list: [
+        { label: '2023', value: '2023' },
         { label: '2022', value: '2022' },
         { label: '2021', value: '2021' },
         { label: '2020', value: '2020' },
@@ -115,29 +118,30 @@ class App extends Component{
     {
       eventName: "ready",
       callback({ chartWrapper, google}) {
-        if (chartWrapper["Bea"]["bf"][1]["label"] != "null"){
+        console.log(chartWrapper)
+        if (chartWrapper["Bea"]["bf"][1]["label"] !== "null"){
           var team_counter = 0;
           var game_num_array = ["Header","null","null","null","null","null"]
           var win_loss_num_array = ["Header","null","null","null","null","null"]
           var team_name_array = ["Header","null","null","null","null","null"]
-          for(var i= 1; i < 6; i++){
+          for(let i= 1; i < 6; i++){
             team_name_array[i] = chartWrapper["Bea"]["bf"][i]["label"]
           }
           chartendloop:
-          for(var i = chartWrapper["Bea"]["Wf"].length-1; i > -1; i--){
-            for(var j = 1; j < 6; j++){
-              if(game_num_array[j] == "null" && (typeof chartWrapper["Bea"]["Wf"][i]["c"][j]["v"] !== "undefined")){
+          for(let i = chartWrapper["Bea"]["Wf"].length-1; i > -1; i--){
+            for(let j = 1; j < 6; j++){
+              if(game_num_array[j] === "null" && (typeof chartWrapper["Bea"]["Wf"][i]["c"][j]["v"] !== "undefined")){
                 game_num_array[j] = chartWrapper["Bea"]["Wf"][i]["c"][j]["v"]
                 win_loss_num_array[j] = i
                 team_counter++
-                if(team_counter == 5){
+                if(team_counter === 5){
                   break chartendloop; 
                 }
               }
             }
           }
           console.log("---------------------------")
-          for(var i= 1; i < 6; i++){
+          for(let i= 1; i < 6; i++){
             var layout = chartWrapper.getChart().getChartLayoutInterface();
             var yPos = layout.getYLocation(game_num_array[i]);
             var xPos = layout.getXLocation(win_loss_num_array[i]);
@@ -197,21 +201,22 @@ class App extends Component{
         const response = await getDoc(docRef)
         var seasonData = response.data()
 
+
         // convert the date to local time
         // TODO: this only needs to be ran once
-        var date_2022 = this.state.data_date_disclaimer
-        if(this.state.season == '2022'){
+        var date_text = this.state.data_date_disclaimer
+        if(this.state.season === current_year){
           var date = new Date(0)
           date.setUTCSeconds(seasonData["epochdate"])
           var options = { year: 'numeric', month: 'long', day: 'numeric' , hour: 'numeric', minute: 'numeric', timeZoneName: 'short'}
-          date_2022 = " on " + date.toLocaleDateString("en-US", options)
+          date_text = " on " + date.toLocaleDateString("en-US", options)
         }
         this.setState({
           complete_data: {
                 ...this.state.complete_data,
                 [seasonData.year]: seasonData
           },
-          data_date_disclaimer: date_2022
+          data_date_disclaimer: date_text
         }, () => {
           this.updateGraph();
         });
@@ -335,11 +340,11 @@ class App extends Component{
               options={this.state.options}
               chartEvents={this.chartEvents}
             />
-            <img id="teamLogo0" className="teamLogo"></img>
-            <img id="teamLogo1" className="teamLogo"></img>
-            <img id="teamLogo2" className="teamLogo"></img>
-            <img id="teamLogo3" className="teamLogo"></img>
-            <img id="teamLogo4" className="teamLogo"></img>
+            <img id="teamLogo0" className="teamLogo" alt="teamLogo0"></img>
+            <img id="teamLogo1" className="teamLogo" alt="teamLogo1"></img>
+            <img id="teamLogo2" className="teamLogo" alt="teamLogo2"></img>
+            <img id="teamLogo3" className="teamLogo" alt="teamLogo3"></img>
+            <img id="teamLogo4" className="teamLogo" alt="teamLogo4"></img>
           </div>
         </div>
         <h4 id="dataDisclaimer">Data was last sourced from <a href="https://www.baseball-reference.com/">baseball-reference.com</a>{this.state.data_date_disclaimer}</h4>

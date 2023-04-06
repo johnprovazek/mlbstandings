@@ -7,7 +7,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from datetime import date
 
-def scrape(data, context):
+def scrape():
     league_dict = {
         "year": date.today().year,
         "epochdate": None,
@@ -67,11 +67,10 @@ def scrape(data, context):
             meta_div = soup.find('div', id="meta")
             child_div = meta_div.findAll('div')[1]
             paragraph = child_div.findAll('p')[0]
-            if(league_dict["year"] == 2022):
+            if(league_dict["year"] == date.today().year):
                 standings_position = paragraph.contents[2].replace("\n", "").split(',')[1].strip()[0]
             else:
                 standings_position = paragraph.contents[2].replace("\n", "").split(',')[1].strip()[12:13]
-                print( standings_position )
             if ( standings_position == "1"):
                 league_dict["divisions"][division]["leader"] = team
 
@@ -106,7 +105,6 @@ def scrape(data, context):
 
     league_dict["maxwinloss"] = math.ceil((win_loss_max_tracker+1)/10)*10
     league_dict["maxgames"] = math.ceil((max_games_tracker+1)/10)*10
-    # print(league_dict)
 
     cred = credentials.Certificate("firebasekey.json")
     firebase_admin.initialize_app(cred)
