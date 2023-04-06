@@ -1,15 +1,15 @@
 {
-  "main.css": "/mlbstandings/static/css/main.2f02632c.chunk.css",
-  "main.js": "/mlbstandings/static/js/main.17a7c406.chunk.js",
-  "main.js.map": "/mlbstandings/static/js/main.17a7c406.chunk.js.map",
-  "static/js/1.98fae294.chunk.js": "/mlbstandings/static/js/1.98fae294.chunk.js",
-  "static/js/1.98fae294.chunk.js.map": "/mlbstandings/static/js/1.98fae294.chunk.js.map",
-  "static/js/2.6dcacdf0.chunk.js": "/mlbstandings/static/js/2.6dcacdf0.chunk.js",
-  "static/js/2.6dcacdf0.chunk.js.map": "/mlbstandings/static/js/2.6dcacdf0.chunk.js.map",
-  "runtime~main.js": "/mlbstandings/static/js/runtime~main.069c14ae.js",
-  "runtime~main.js.map": "/mlbstandings/static/js/runtime~main.069c14ae.js.map",
-  "static/css/main.2f02632c.chunk.css.map": "/mlbstandings/static/css/main.2f02632c.chunk.css.map",
-  "index.html": "/mlbstandings/index.html",
-  "precache-manifest.b963b15d2210bb1b7f363a7a21f37adc.js": "/mlbstandings/precache-manifest.b963b15d2210bb1b7f363a7a21f37adc.js",
-  "service-worker.js": "/mlbstandings/service-worker.js"
+  "files": {
+    "main.css": "/mlbstandings/static/css/main.2a38fa76.css",
+    "main.js": "/mlbstandings/static/js/main.aac718c1.js",
+    "static/js/787.8d06ffcf.chunk.js": "/mlbstandings/static/js/787.8d06ffcf.chunk.js",
+    "index.html": "/mlbstandings/index.html",
+    "main.2a38fa76.css.map": "/mlbstandings/static/css/main.2a38fa76.css.map",
+    "main.aac718c1.js.map": "/mlbstandings/static/js/main.aac718c1.js.map",
+    "787.8d06ffcf.chunk.js.map": "/mlbstandings/static/js/787.8d06ffcf.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.2a38fa76.css",
+    "static/js/main.aac718c1.js"
+  ]
 }
