@@ -205,7 +205,7 @@ class App extends Component{
         // convert the date to local time
         // TODO: this only needs to be ran once
         var date_text = this.state.data_date_disclaimer
-        if(this.state.season === current_year){
+        if(this.state.season === current_year.toString()){
           var date = new Date(0)
           date.setUTCSeconds(seasonData["epochdate"])
           var options = { year: 'numeric', month: 'long', day: 'numeric' , hour: 'numeric', minute: 'numeric', timeZoneName: 'short'}
