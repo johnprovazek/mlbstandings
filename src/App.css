@@ -123,7 +123,6 @@
 }
 
 select {
-  /* styling */
   color: black;
   background-color: white;
   border-color: white;
@@ -133,7 +132,6 @@ select {
   font: inherit;
   line-height: 1.5rem;
   padding: 0.5rem 3.5em 0.5rem 1em;
-  /* reset */
   margin: 0;      
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -181,6 +179,10 @@ select:-moz-focusring {
   text-shadow: 0 0 0 #000;
 }
 
+option{
+  overflow-y:scroll;
+}
+
 body {
   background-color: white;
   font: bold 1em/100% "Helvetica Neue", Arial, sans-serif;
@@ -214,15 +216,11 @@ a{
   color: white;
 }
 
-#dataDisclaimer{
+.footnotes{
   color: white;
   line-height: 1.5rem;
   margin-left: 2vw;
   margin-right: 2vw;
-}
-
-.whiteHat {
-
 }
 
 .teamLogo{

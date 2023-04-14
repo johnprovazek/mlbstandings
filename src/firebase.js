@@ -3,13 +3,13 @@ import { getFirestore } from '@firebase/firestore';
 const { initializeAppCheck, ReCaptchaV3Provider } = require("firebase/app-check");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAQLSFe-lgeMRupJNWMLs3qAjVJdFqvL4k",
-  authDomain: "mlbstandings-b51c6.firebaseapp.com",
-  projectId: "mlbstandings-b51c6",
-  storageBucket: "mlbstandings-b51c6.appspot.com",
-  messagingSenderId: "316819942006",
-  appId: "1:316819942006:web:6daca212a40f921f204d57",
-  measurementId: "G-6Y93NMRHVD"
+  apiKey: "AIzaSyDifgwhqmZNvyV4736aRB-XGzcVy4Upz8A",
+  authDomain: "mlbstandings-383717.firebaseapp.com",
+  projectId: "mlbstandings-383717",
+  storageBucket: "mlbstandings-383717.appspot.com",
+  messagingSenderId: "382941968137",
+  appId: "1:382941968137:web:6db4c64944da411b8385d8",
+  measurementId: "G-EZBTG17WZP"
 };
 
 const app = initializeApp(firebaseConfig);

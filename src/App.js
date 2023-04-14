@@ -4,11 +4,11 @@ import {db} from "./firebase"
 import {doc, getDoc} from "firebase/firestore";
 import {Chart} from "react-google-charts";
 
-// import blue from './testimages/blue.png';
-// import green from './testimages/green.png';
-// import orange from './testimages/orange.png';
-// import red from './testimages/red.png';
-// import yellow from './testimages/yellow.png';
+// import blue from './images/blue.png';
+// import green from './images/green.png';
+// import orange from './images/orange.png';
+// import red from './images/red.png';
+// import yellow from './images/yellow.png';
 
 var current_year = new Date().getFullYear()
 var divisions_list = ['ALW','ALC','ALE','NLW','NLC','NLE']
@@ -21,7 +21,7 @@ class App extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      chartWrapper:null,
+      astrisk: "",
       complete_data: {},
       logos_x_y: [],
       scaled_line_width: 1,
@@ -83,35 +83,26 @@ class App extends Component{
   // limited documentation for react-google-charts
   chartEvents = [{
     eventName: "ready",
-    callback({ chartWrapper, google}) {
+    callback({chartWrapper}) {
       let layout = chartWrapper.getChart().getChartLayoutInterface();
       let logo_coordinates = document.getElementById("logoCoordinates");
       let logo_coordinates_json = JSON.parse(logo_coordinates.value);
-      // console.log(logo_coordinates_json)
+      // let chart_coords = [null,null,null,null,null]
       for (let i = 0; i < 5; i++) {
-        let yPos = layout.getYLocation(logo_coordinates_json["coordinates"][i]["x"]);
-        let xPos = layout.getXLocation(logo_coordinates_json["coordinates"][i]["y"]);
-        // console.log(yPos)
-        // console.log(xPos)
+        let xPos = Math.floor(layout.getXLocation(logo_coordinates_json["coordinates"][i]["x"]));
+        let yPos = Math.floor(layout.getYLocation(logo_coordinates_json["coordinates"][i]["y"]));
+        // console.log(xPos + " " + yPos)
+        // chart_coords[i] = {"x":xPos,"y":yPos}
+
         var teamLogo = document.getElementById("teamLogo" + i);
         teamLogo.style.display = "block";
         var squareWidth = teamLogo.clientWidth
-        // console.log(squareWidth)
         teamLogo.src = "./logos/" + logo_coordinates_json["team_names"][i] +".svg";
         teamLogo.style.top = (yPos - squareWidth/2) + 'px';
         teamLogo.style.left = (xPos) + 'px';
       }
     }
   }];
-
-  // TODO: implement chart download option later
-  setChartDownloadhref() {
-    if (this.state.chartWrapper === null) { 
-      console.error("ChartWrapper not ready yet"); 
-    }
-    let download_href = document.getElementById("download_href");
-    download_href.href = this.state.chartWrapper.getChart().getImageURI();
-  }
 
   componentDidMount() {
     this.fetchSeasonData();
@@ -149,7 +140,6 @@ class App extends Component{
         const docRef = doc(db, "seasons", this.state.season)
         const response = await getDoc(docRef)
         var seasonData = response.data()
-
         // convert the date to local time
         // TODO: this only needs to be ran once
         var date_text = this.state.data_date_disclaimer
@@ -179,7 +169,7 @@ class App extends Component{
   logoDataUpdater(teamIndex,x,y){
     let logo_coordinates = document.getElementById("logoCoordinates");
     let logo_coordinates_json = JSON.parse(logo_coordinates.value);
-    console.log(logo_coordinates_json)
+    // console.log(logo_coordinates_json)
     logo_coordinates_json["coordinates"][teamIndex] = {"x":x,"y":y}
     logo_coordinates_json["team_names"] = this.state.complete_data[this.state.season]["divisions"][this.state.division]["teams"]
     let logo_cordinates_string = JSON.stringify(logo_coordinates_json)
@@ -188,8 +178,7 @@ class App extends Component{
 
   updateGraph(){
     var dict = this.state.complete_data[this.state.season]["divisions"][this.state.division]
-    var max_games = this.state.complete_data[this.state.season]["maxgames"] // TODO: Some reason there is no out of bounds error
-
+    var max_games = this.state.complete_data[this.state.season]["maxgames"]
     var lineScaleMultiplier = 1
     if(window.innerWidth < 1281){
       var element = document.getElementById("chartContainer")
@@ -215,7 +204,7 @@ class App extends Component{
           let cur_game_unit = dict["scores"][dict["teams"][j]][i]
           let next_game_unit = dict["scores"][dict["teams"][j]][i+1]
           if(typeof cur_game_unit === "number" && typeof next_game_unit === "undefined"){ // next is undefined, meaning this is the last win/loss score
-            this.logoDataUpdater(j,cur_game_unit,i)
+            this.logoDataUpdater(j,i,cur_game_unit)
           }
           t_s.push(cur_game_unit)
         }
@@ -309,6 +298,7 @@ class App extends Component{
     
     this.setState({
       cur_data: new_data,
+      astrisk: dict["asterisk"],
       options: {
         enableInteractivity: 'false',
         legend: 'none',
@@ -396,10 +386,6 @@ class App extends Component{
               data={this.state.cur_data}
               options={this.state.options}
               chartEvents={this.chartEvents}
-              chartWrapperParams={{season : this.state.season}}
-              getChartWrapper={chartWrapper => {
-                this.setState({ chartWrapper });
-              }}
             />
             <data id="logoCoordinates" value='{"coordinates":[null,null,null,null,null],"team_names":["MPT","MPT","MPT","MPT","MPT"]}'></data>
             {/* <img id="teamLogo0" className="teamLogo" alt="teamLogo0" src={blue}></img>
@@ -414,8 +400,8 @@ class App extends Component{
             <img id="teamLogo4" className="teamLogo" alt="teamLogo4"></img>
           </div>
         </div>
-        <h4 id="dataDisclaimer">Data was last sourced from <a href="https://www.baseball-reference.com/">baseball-reference.com</a>{this.state.data_date_disclaimer}</h4>
-        {/* <a id="download_href" href="www.google.com" download={this.state.season + "_" + this.state.division + "_Standings.png"}>download</a> */}
+        <h4 id="astrisk" className="footnotes">{this.state.astrisk}</h4>
+        <h4 id="dataDisclaimer" className="footnotes">Data was last sourced from <a href="https://www.baseball-reference.com/">baseball-reference.com</a>{this.state.data_date_disclaimer}</h4>
       </div>
     );
   }

@@ -16,8 +16,6 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 - Develop an algorithm to improve the overlapping team icons.
 - Add an option to print the chart.
 - Consider adding historic data past 2013? NL Central in 2012 had 6 teams and in 2004/5 the Expos and Anaheim Angels names changes. These will be the first issues that need to be addressed if adding more historic data.
-- Consider adding a scroll bar for the season drop down. This will be more necessary if more seasons are added.
-- Include an asterisks about the [Cubs-Pirates 2016 tie game](https://www.youtube.com/watch?v=zr4zvsVQvk4&ab_channel=MLB).  
 - Fix mobile issue where the axis values aren't showing up.
 - Improve quality of React code / react-google-charts issues.
 - Use a linter and a style guide.
