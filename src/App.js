@@ -64,7 +64,7 @@ function App() {
         var teamLogo = document.getElementById("teamLogo" + i);
         teamLogo.style.display = "block";
         var squareWidth = teamLogo.clientWidth
-        // teamLogo.src = "./logos/" + logo_coordinates_json["team_names"][i] +".svg";
+        teamLogo.src = "./logos/" + logo_coordinates_json["team_names"][i] +".svg";
         teamLogo.style.top = (yPos - squareWidth/2) + 'px';
         teamLogo.style.left = (xPos) + 'px';
       }
