@@ -115,8 +115,8 @@ def scrape(arg0,arg1):
     win_loss_max_tracker = 0
     max_games_tracker = 0
     for division in league_dict["divisions"]:
-        time.sleep(15)
         for team in league_dict["divisions"][division]["teams"]:
+            time.sleep(4) # Adding this to get over twenty requests in a minute
             url = "https://www.baseball-reference.com/teams/" + team + "/" + str(league_dict["year"]) +"-schedule-scores.shtml"
             req = requests.get(url)
             soup = BeautifulSoup(req.content, 'html.parser')

@@ -13,9 +13,12 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 [baseball-reference.com](https://www.baseball-reference.com/) is being used to gather baseball standings data.
 
 ## Bugs & Improvements
+- Use your own implemention of google charts instead of react-google-charts
 - Develop an algorithm to improve the overlapping team icons.
 - Add an option to print the chart.
-- Consider adding historic data past 2013? NL Central in 2012 had 6 teams and in 2004/5 the Expos and Anaheim Angels names changes. These will be the first issues that need to be addressed if adding more historic data.
+- Consider adding historic data past 2013? NL Central in 2012 had 6 teams and in 2004/5 the Expos and Anaheim Angels names changes. These will be the first issues that will need to be addressed if adding more historic data.
 - Fix mobile issue where the axis values aren't showing up.
+- Move base options for chart to JSON file once chart options are decided upon
+- Add url paths for specific years and divisions
 - Improve quality of React code / react-google-charts issues.
 - Use a linter and a style guide.

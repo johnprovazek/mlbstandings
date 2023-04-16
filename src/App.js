@@ -1,8 +1,17 @@
-import "./App.css";
-import {React,Component} from "react";
-import {db} from "./firebase"
-import {doc, getDoc} from "firebase/firestore";
-import {Chart} from "react-google-charts";
+import './App.css';
+
+import chartDefaultOptions from './data/chartDefaultOptions';
+
+import {React}  from 'react';
+import {useState}  from 'react';
+import {useEffect}  from 'react';
+import {useRef}  from 'react';
+import {db} from './firebase'
+import {doc} from 'firebase/firestore';
+import {getDoc} from 'firebase/firestore';
+import {Chart} from 'react-google-charts';
+import Parser from 'html-react-parser';
+// import Ghart from './ghart.js'
 
 // import blue from './images/blue.png';
 // import green from './images/green.png';
@@ -16,72 +25,30 @@ var seasons_list = []
 for (let year = current_year; year >= 2013; year--) {
   seasons_list.push(String(year))
 }
+var title_label_dict ={
+  'ALW': 'AL West',
+  'ALC': 'AL Central' ,
+  'ALE': 'AL East' ,
+  'NLW': 'NL West' ,
+  'NLC': 'NL Central' ,
+  'NLE': 'NL East' ,
+}
 
-class App extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      astrisk: "",
-      complete_data: {},
-      logos_x_y: [],
-      scaled_line_width: 1,
-      layout: null,
-      cur_data: [["Games Played", "null", "null", "null", "null", "null"]],
-      data_date_disclaimer: "",
-      options: {
-        legend: 'none',
-        chartArea: {
-          backgroundColor: '#EAEAEA',
-          top: "2.2222%",
-          bottom: "13.333%",
-          left: "6%",
-          right: "6%"
-        },
-        hAxis: {
-          textPosition: 'none',
-          baselineColor: 'white',
-          viewWindowMode: 'explicit',
-          viewWindow: {
-            min: 0,
-            max: 100,
-          },
-          gridlines: {
-            count: 0,
-            multiple: 10
-          }
-        },
-        vAxis: {
-          textPosition: 'none',
-          viewWindowMode: 'explicit',
-          viewWindow: {
-            min: -20,
-            max: -20
-          },
-          gridlines: {
-            multiple: 10
-          },
-          minorGridlines: {
-            count: 0
-          }
-        }
-      },
-      season: String(current_year),
-      division: 'NLC',
-      title_label_list: {
-        'ALW': 'AL West',
-        'ALC': 'AL Central' ,
-        'ALE': 'AL East' ,
-        'NLW': 'NL West' ,
-        'NLC': 'NL Central' ,
-        'NLE': 'NL East' ,
-      },
-    };
-  }
+function App() {
+  const didMount = useRef(false);
+  const [astrisk, setAstrisk] = useState("");
+  const [completeData, setCompleteData] = useState({});
+  const [chartData, setChartData] = useState([['Games Played', 'null', 'null', 'null', 'null', 'null']]);
+  const [season, setSeason] = useState(String(current_year));
+  const [division, setDivision] = useState('NLC');
+  const [dateDataDisclaimer, setDateDataDisclaimer] = useState("");
+  const [options, setOptions] = useState(chartDefaultOptions);
 
   // TODO: bad hack to be able to draw on chart
   // can't figure out how to access state but can access the dom?
   // limited documentation for react-google-charts
-  chartEvents = [{
+
+  let chartEvents = [{
     eventName: "ready",
     callback({chartWrapper}) {
       let layout = chartWrapper.getChart().getChartLayoutInterface();
@@ -97,88 +64,64 @@ class App extends Component{
         var teamLogo = document.getElementById("teamLogo" + i);
         teamLogo.style.display = "block";
         var squareWidth = teamLogo.clientWidth
-        teamLogo.src = "./logos/" + logo_coordinates_json["team_names"][i] +".svg";
+        // teamLogo.src = "./logos/" + logo_coordinates_json["team_names"][i] +".svg";
         teamLogo.style.top = (yPos - squareWidth/2) + 'px';
         teamLogo.style.left = (xPos) + 'px';
       }
     }
   }];
 
-  componentDidMount() {
-    this.fetchSeasonData();
-    window.addEventListener('resize', () => {
-      this.fetchSeasonData();
-    })
-  }
+  useEffect(() => {
+    if (!didMount.current) {
+      return;
+    }
+    fetchSeasonData()
+  }, [season,division]);
 
-  componentWillUnmount() {
-    window.removeEventListener('resize', () => {
-      this.fetchSeasonData();
-    })
-  }
-
-  handleSeasonChange(input){
-    this.setState({
-      season: input
-    }, () => {
-      this.fetchSeasonData();
-    });
-  }
-
-  handleDivisionChange(input){
-    this.setState({
-      division: input
-    }, () => {
-      this.fetchSeasonData();
-    });
-  }
-
-  fetchSeasonData(){
+  const fetchSeasonData = () => {
     const firebaseRequest = async () => {
-      if(this.state.season in this.state.complete_data === false){
-        // firebase request
-        const docRef = doc(db, "seasons", this.state.season)
+      if(season in completeData === false){
+        const docRef = doc(db, "seasons", season)
         const response = await getDoc(docRef)
         var seasonData = response.data()
-        // convert the date to local time
-        // TODO: this only needs to be ran once
-        var date_text = this.state.data_date_disclaimer
-        if(this.state.season === current_year.toString()){
+        if(dateDataDisclaimer === ""){
           var date = new Date(0)
           date.setUTCSeconds(seasonData["epochdate"])
           let date_style = { year: 'numeric', month: 'long', day: 'numeric' , hour: 'numeric', minute: 'numeric', timeZoneName: 'short'}
-          date_text = " on " + date.toLocaleDateString("en-US", date_style)
+          let disclaimer = date.toLocaleDateString('en-US', date_style)
+          setDateDataDisclaimer('Data was last sourced from <a href="https://www.baseball-reference.com/">baseball-reference.com</a> on ' + disclaimer)
         }
-        this.setState({
-          complete_data: {
-            ...this.state.complete_data,
-            [seasonData.year]: seasonData
-          },
-          data_date_disclaimer: date_text
-        }, () => {
-          this.updateGraph();
-        });
+        setCompleteData({
+          ...completeData,
+          [seasonData.year]: seasonData
+        })
       }
       else{
-        this.updateGraph();
+        updateGraph();
       }
     }
     firebaseRequest()
   };
 
-  logoDataUpdater(teamIndex,x,y){
+  useEffect(() => {
+    if (!didMount.current) {
+      return;
+    }
+    updateGraph();
+  }, [completeData]);
+
+  const logoDataUpdater = (teamIndex,x,y) => {
     let logo_coordinates = document.getElementById("logoCoordinates");
     let logo_coordinates_json = JSON.parse(logo_coordinates.value);
-    // console.log(logo_coordinates_json)
     logo_coordinates_json["coordinates"][teamIndex] = {"x":x,"y":y}
-    logo_coordinates_json["team_names"] = this.state.complete_data[this.state.season]["divisions"][this.state.division]["teams"]
+    logo_coordinates_json["team_names"] = completeData[season]["divisions"][division]["teams"]
     let logo_cordinates_string = JSON.stringify(logo_coordinates_json)
     logo_coordinates.value = logo_cordinates_string
   };
 
-  updateGraph(){
-    var dict = this.state.complete_data[this.state.season]["divisions"][this.state.division]
-    var max_games = this.state.complete_data[this.state.season]["maxgames"]
+  const updateGraph = () => {
+    var dict = completeData[season]["divisions"][division]
+    var max_games = completeData[season]["maxgames"]
     var lineScaleMultiplier = 1
     if(window.innerWidth < 1281){
       var element = document.getElementById("chartContainer")
@@ -204,7 +147,7 @@ class App extends Component{
           let cur_game_unit = dict["scores"][dict["teams"][j]][i]
           let next_game_unit = dict["scores"][dict["teams"][j]][i+1]
           if(typeof cur_game_unit === "number" && typeof next_game_unit === "undefined"){ // next is undefined, meaning this is the last win/loss score
-            this.logoDataUpdater(j,i,cur_game_unit)
+            logoDataUpdater(j,i,cur_game_unit)
           }
           t_s.push(cur_game_unit)
         }
@@ -295,116 +238,126 @@ class App extends Component{
     }
     let leading_team_index = dict["ranking"].indexOf(0);
     document.body.style.backgroundColor = dict["colors"][leading_team_index]
-    
-    this.setState({
-      cur_data: new_data,
-      astrisk: dict["asterisk"],
-      options: {
-        enableInteractivity: 'false',
-        legend: 'none',
-        lineWidth: scaledLineWidth,
-        colors: [dict["colors"][0], dict["colors"][1], dict["colors"][2], dict["colors"][3], dict["colors"][4]],
-        chartArea: {
-          backgroundColor: '#EAEAEA',
-          top: "2.2222%",
-          bottom: "13.333%",
-          left: "6%",
-          right: "6%"
+
+
+    setAstrisk(dict["asterisk"])
+    setChartData(new_data)
+    setOptions({
+      enableInteractivity: 'false',
+      legend: 'none',
+      lineWidth: scaledLineWidth,
+      colors: [dict["colors"][0], dict["colors"][1], dict["colors"][2], dict["colors"][3], dict["colors"][4]],
+      chartArea: {
+        backgroundColor: '#EAEAEA',
+        top: "2.2222%",
+        bottom: "13.333%",
+        left: "6%",
+        right: "6%"
+      },
+      hAxis: {
+        title: 'GAMES PLAYED',
+        titleTextStyle: {
+          italic: false,
         },
-        hAxis: {
-          title: 'GAMES PLAYED',
-          titleTextStyle: {
-            italic: false,
-          },
-          baselineColor: 'white',
-          viewWindowMode: 'explicit',
-          viewWindow: {
-            max: this.state.complete_data[this.state.season]["maxgames"]
-          },
-          gridlines: {
-            count: 0,
-            multiple: this.state.complete_data[this.state.season]["maxgames"] <= 20 ? 5 : 10
-          },
-          minorGridlines: {
-            count: 0
-          }
+        baselineColor: 'white',
+        viewWindowMode: 'explicit',
+        viewWindow: {
+          max: completeData[season]["maxgames"]
         },
-        vAxis: {
-          title: 'WINS - LOSSES',
-          titleTextStyle: {
-            italic: false,
-          },
-          viewWindowMode: 'explicit',
-          viewWindow: {
-            max: this.state.complete_data[this.state.season]["maxwinloss"],
-            min: this.state.complete_data[this.state.season]["maxwinloss"] * -1
-          },
-          gridlines: {
-            multiple: this.state.complete_data[this.state.season]["maxwinloss"] <= 20 ? 5 : 10
-          },
-          minorGridlines: {
-            count: 0
-          }
-        } 
-      }
-    });
+        gridlines: {
+          count: 0,
+          multiple: completeData[season]["maxgames"] <= 20 ? 5 : 10
+        },
+        minorGridlines: {
+          count: 0
+        }
+      },
+      vAxis: {
+        title: 'WINS - LOSSES',
+        titleTextStyle: {
+          italic: false,
+        },
+        viewWindowMode: 'explicit',
+        viewWindow: {
+          max: completeData[season]["maxwinloss"],
+          min: completeData[season]["maxwinloss"] * -1
+        },
+        gridlines: {
+          multiple: completeData[season]["maxwinloss"] <= 20 ? 5 : 10
+        },
+        minorGridlines: {
+          count: 0
+        }
+      } 
+    })
   }
 
-  render() {
-    return (
-      <div className="App">
-        <h1 id="maintitle">MLB Standings&nbsp;
-          <a href="https://github.com/johnprovazek/mlbstandings">
-            <i className="fa fa-github" aria-hidden="true"></i>
-          </a>
-        </h1>
-        <div id="dropdownContainer">
-          <div id="standingsContainer">
-            <h2 className="dropdownTitle">Season:</h2>
-            <select className="minimal" value={this.state.season} onChange={(e) => this.handleSeasonChange(e.target.value)}>
-              {seasons_list.map((seasons_list_item) => (
-                <option key={seasons_list_item} value={seasons_list_item}>{seasons_list_item}</option>
-              ))}
-            </select>
-          </div>
-          <div id="divisionContainer">
-            <h2 className="dropdownTitle">Division:</h2>  
-            <select className="minimal" value={this.state.division} onChange={(e) => this.handleDivisionChange(e.target.value)}>
-              {divisions_list.map((divisions_list_item) => (
-                <option key={divisions_list_item} value={divisions_list_item}>{divisions_list_item}</option>
-              ))}
-            </select>
-          </div>
+  useEffect(() => {
+    didMount.current = true;
+    fetchSeasonData();
+    // window.addEventListener('resize', () => {
+    //   fetchSeasonData();
+    // })
+  },[]);
+
+  return (
+    <div className="App">
+      <h1 id="maintitle">MLB Standings&nbsp;
+        <a href="https://github.com/johnprovazek/mlbstandings">
+          <i className="fa fa-github" aria-hidden="true"></i>
+        </a>
+      </h1>
+      <div id="dropdownContainer">
+        <div id="standingsContainer">
+          <h2 className="dropdownTitle">Season:</h2>
+          <select className="minimal" value={season} onChange={e => setSeason(e.target.value)}>
+            {seasons_list.map((seasons_list_item) => (
+              <option key={seasons_list_item} value={seasons_list_item}>{seasons_list_item}</option>
+            ))}
+          </select>
         </div>
-        <div id="chartContainer">
-          <h2 id="chartTitle">{this.state.season} {this.state.title_label_list[this.state.division]} Standings</h2>
-          <div id="googleChartContainer">
-            <Chart
-              chartType="LineChart"
-              width="100%"
-              height="100%"
-              data={this.state.cur_data}
-              options={this.state.options}
-              chartEvents={this.chartEvents}
-            />
-            <data id="logoCoordinates" value='{"coordinates":[null,null,null,null,null],"team_names":["MPT","MPT","MPT","MPT","MPT"]}'></data>
-            {/* <img id="teamLogo0" className="teamLogo" alt="teamLogo0" src={blue}></img>
-            <img id="teamLogo1" className="teamLogo" alt="teamLogo1" src={green}></img>
-            <img id="teamLogo2" className="teamLogo" alt="teamLogo2" src={orange}></img>
-            <img id="teamLogo3" className="teamLogo" alt="teamLogo3" src={red}></img>
-            <img id="teamLogo4" className="teamLogo" alt="teamLogo4" src={yellow}></img> */}
-            <img id="teamLogo0" className="teamLogo" alt="teamLogo0"></img>
-            <img id="teamLogo1" className="teamLogo" alt="teamLogo1"></img>
-            <img id="teamLogo2" className="teamLogo" alt="teamLogo2"></img>
-            <img id="teamLogo3" className="teamLogo" alt="teamLogo3"></img>
-            <img id="teamLogo4" className="teamLogo" alt="teamLogo4"></img>
-          </div>
+        <div id="divisionContainer">
+          <h2 className="dropdownTitle">Division:</h2>  
+          <select className="minimal" value={division} onChange={e => setDivision(e.target.value)}>
+            {divisions_list.map((divisions_list_item) => (
+              <option key={divisions_list_item} value={divisions_list_item}>{divisions_list_item}</option>
+            ))}
+          </select>
         </div>
-        <h4 id="astrisk" className="footnotes">{this.state.astrisk}</h4>
-        <h4 id="dataDisclaimer" className="footnotes">Data was last sourced from <a href="https://www.baseball-reference.com/">baseball-reference.com</a>{this.state.data_date_disclaimer}</h4>
       </div>
-    );
-  }
+      <div id="chartContainer">
+        <h2 id="chartTitle">{season} {title_label_dict[division]} Standings</h2>
+        <div id="googleChartContainer">
+          {/* <Ghart
+            data={this.state.chartData}
+            pageStyle="chords"
+          >
+          </Ghart> */}
+          <Chart
+            chartType="LineChart"
+            width="100%"
+            height="100%"
+            data={chartData}
+            options={options}
+            chartEvents={chartEvents}
+          />
+          <data id="logoCoordinates" value='{"coordinates":[null,null,null,null,null],"team_names":["MPT","MPT","MPT","MPT","MPT"]}'></data>
+          {/* <img id="teamLogo0" className="teamLogo" alt="teamLogo0" src={blue}></img>
+          <img id="teamLogo1" className="teamLogo" alt="teamLogo1" src={green}></img>
+          <img id="teamLogo2" className="teamLogo" alt="teamLogo2" src={orange}></img>
+          <img id="teamLogo3" className="teamLogo" alt="teamLogo3" src={red}></img>
+          <img id="teamLogo4" className="teamLogo" alt="teamLogo4" src={yellow}></img> */}
+          <img id="teamLogo0" className="teamLogo" alt="teamLogo0"></img>
+          <img id="teamLogo1" className="teamLogo" alt="teamLogo1"></img>
+          <img id="teamLogo2" className="teamLogo" alt="teamLogo2"></img>
+          <img id="teamLogo3" className="teamLogo" alt="teamLogo3"></img>
+          <img id="teamLogo4" className="teamLogo" alt="teamLogo4"></img>
+        </div>
+      </div>
+      <h4 id="astrisk" className="footnotes">{astrisk}</h4>
+      <h4 id="dataDisclaimer" className="footnotes">{Parser(dateDataDisclaimer)}</h4>
+    </div>
+  );
 }
 
 export default App;
