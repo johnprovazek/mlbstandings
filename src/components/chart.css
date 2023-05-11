@@ -1,0 +1,47 @@
+#chartComponentContainer{
+  height: 100%;
+  width: 100%;
+  font: 24px Arial, sans-serif;
+}
+
+#chartComponentTitle {
+  font-size: 24px;
+  margin-top:0;
+  margin-bottom:0;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+}
+
+#chartComponentGoogleChartContainer{
+  height: 90%;
+  width: 100%;
+  position: relative;
+}
+
+#chartComponentStandingsChart {
+  height: 100%;
+  width: 100%;
+}
+
+#chartImage{
+  display:none;
+  height: 100%;
+  width: 100%;
+}
+
+#svgChart{
+  display:none;
+  height: 100%;
+  width: 100%;
+}
+
+.teamLogo{
+  display:none;
+  border: none;
+  position: absolute;
+}
+
+

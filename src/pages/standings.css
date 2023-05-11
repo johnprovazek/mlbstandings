@@ -1,0 +1,130 @@
+@media only screen and (min-width: 1281px){
+  #chartContainer{
+    width: 60vw;
+    height: 30vw;
+  }
+}
+@media only screen and (max-width: 1280px) {
+  #chartContainer{
+    width: min(768px,96vw);
+    height: min(384px,48vw);
+  }
+}
+
+html{
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+body {
+  background-color: #EAEAEA;
+  font: 16px Arial, sans-serif;
+  padding-top: 32px;
+  text-align: center;
+}
+
+a{
+  color: white;
+}
+
+select {
+  color: black;
+  background-color: white;
+  border-color: white;
+  border: thin solid white;
+  border-radius: 4px;
+  display: inline-block;
+  font: 16px Arial, sans-serif;
+  font-weight: 700;
+  line-height: 24px;
+  padding: 8px 56px 8px 16px;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select.minimal {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='5' width='10'><path d='M0,0h10L5,5L0,0' fill='%23eaeaea'/> </svg>"),
+    linear-gradient(to right, #EAEAEA, #EAEAEA);
+  background-position:
+    calc(100% - 15px) 18px,
+    calc(100% - 40px) 8px;
+  background-size:
+    10px 5px,
+    1px 24px;
+  background-repeat: no-repeat;
+}
+
+select.minimal:focus {
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='5' width='10'><path d='M0,5L5,0l5,5L0,5Z' fill='%23000000'/> </svg>"),
+    linear-gradient(to right, #EAEAEA, #EAEAEA);
+  background-position:
+    calc(100% - 15px) 16px,
+    calc(100% - 40px) 8px;
+  background-size:
+    10px 5px,
+    1px 24px;
+  background-repeat: no-repeat;
+  border-color: white;
+  outline: 0;
+}
+
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+
+option{
+  overflow-y:scroll;
+}
+
+.dropdownTitle {
+  color: white;
+  line-height: 40px;
+  font-size: 24px;
+  margin-top:0;
+  margin-bottom:0;
+}
+
+.footnotes{
+  color: white;
+  line-height: 24px;
+  margin-left: 2vw;
+  margin-right: 2vw;
+}
+
+#maintitle {
+  color: white;
+  line-height: 32px;
+  font-size: 32px;
+  margin: 0 auto 16px auto;
+}
+
+#dropdownContainer{
+  margin-bottom: 32px;
+}
+
+#seasonContainer{
+  display: inline-block;
+  margin-right: 32px;
+}
+
+#divisionContainer{
+  display: inline-block;
+}
+
+#chartContainer{
+  display: block;
+  margin: auto;
+  padding: 1vw;
+  background-color: white;
+  border: thin solid white;
+  border-radius: 4px;
+}
+

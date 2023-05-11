@@ -1,0 +1,58 @@
+{
+  "height": "100%",
+  "width": "100%",
+  "enableInteractivity": false,
+  "legend": "none",
+  "lineWidth": 2,
+  "chartArea": {
+    "backgroundColor": "#EAEAEA",
+    "top": "2.5%",
+    "bottom": "10%",
+    "left": "6%",
+    "right": "6%"
+  },
+  "hAxis": {
+    "title": "GAMES PLAYED",
+    "titleTextStyle": {
+      "italic": false,
+      "bold": true,
+      "fontSize": "16px"
+    },
+    "textStyle": {
+      "color": "black",
+      "italic": false,
+      "bold": true
+    },
+    "slantedText": false,
+    "maxAlternation": 1,
+    "baselineColor": "white",
+    "gridlines": {
+      "count": 0,
+      "minSpacing": 10
+    },
+    "minorGridlines": {
+      "count": 0
+    }
+  },
+  "vAxis": {
+    "title": "WINS - LOSSES",
+    "titleTextStyle": {
+      "italic": false,
+      "bold": true
+    },
+    "textStyle": {
+      "color": "black",
+      "italic": false,
+      "bold": true
+    },
+    "slantedText": false,
+    "maxAlternation": 1,
+    "baselineColor": "#CCC",
+    "gridlines": {
+      "minSpacing": 10
+    },
+    "minorGridlines": {
+      "count": 0
+    }
+  } 
+}
