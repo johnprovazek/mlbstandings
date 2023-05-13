@@ -219,114 +219,62 @@ function Chart(props) {
     if (chartWidth < 677){
       logoWidth = chartWidth/16.925
     }
-    console.log(chartWidth)
-
     // Fill in new dictionary with x and y coordinates from the google chart
     var l_c = [] // new logo coordinates
     for (let i = 0; i < logoCoordinates.length; i++) {
       l_c.push({
         'team' : logoCoordinates[i]['team'],
-        'order': i,
         'ranking' : logoCoordinates[i]['ranking'],
-        'x' : Math.floor(layout.getXLocation(logoCoordinates[i]['x'])),
+        'x' : Math.floor(layout.getXLocation(logoCoordinates[i]['x'])) + logoWidth/2,
         'y' : Math.floor(layout.getYLocation(logoCoordinates[i]['y'])),
-        's_y' : Math.floor(layout.getYLocation(logoCoordinates[i]['y'])),
-        'column': null,
-        'overlap': null
       });
     }
 
-    // Attempt at algorithm to improve the overlapping team icons
-
-    // // Modify x values of logos if there is overlap, assign logos a column value
-    // l_c.sort(function(a, b){return a.x - b.x});
-    // let column_num = -1
-    // for (let i = 0; i < l_c.length; i++) {
-    //   if(l_c[i]['column'] === null){
-    //     let max_column_x = l_c[i]['x'] + logoWidth
-    //     column_num = column_num + 1
-    //     l_c[i]['column'] = column_num
-    //     for (let j = i+1; j < l_c.length; j++) {
-    //       if (l_c[j]['x'] < l_c[i]['x'] + logoWidth){
-    //         l_c[j]['column'] = column_num
-    //         if(l_c[j]['x'] + logoWidth > max_column_x){
-    //           max_column_x = l_c[j]['x'] + logoWidth
+    // Overlap algorithm
+    // let min_x = l_c.reduce((min, p) => p.x < min ? p.x : min, l_c[0].x)
+    // let min_y = l_c.reduce((min, p) => p.y < min ? p.y : min, l_c[0].y)
+    // let max_x = l_c.reduce((max, p) => p.x > max ? p.x : max, l_c[0].x)
+    // let max_y = l_c.reduce((max, p) => p.y > max ? p.y : max, l_c[0].y)
+    // let bb_c_x = (max_x + min_x) / 2 
+    // let bb_c_y = (max_y + min_y) / 2
+    // let m_u = 5
+    // let c_u = 0.25
+    // let overlaps = true
+    // while(overlaps){
+    //   overlaps = false
+    //   let overlap_vectors = []
+    //   for (let i = 0; i < l_c.length; i++) {
+    //     let v = {'x' : 0, 'y': 0}
+    //     for (let j = 0; j < l_c.length; j++) {
+    //       let x_d = l_c[i]['x'] - l_c[j]['x'];
+    //       let y_d = l_c[i]['y'] - l_c[j]['y'];
+    //       if(i != j && Math.abs(x_d) < logoWidth && Math.abs(y_d) < logoWidth){
+    //         v = {
+    //           'x': v['x'] + (x_d < 0 ? -m_u : m_u),
+    //           'y': v['y'] + (y_d < 0 ? -m_u : m_u)
     //         }
     //       }
     //     }
-    //     for (let j = i+1; j < l_c.length; j++) {
-    //       if (l_c[j]['column'] === null && l_c[j]['x'] < max_column_x){
-    //         l_c[j]['x'] = max_column_x
+    //     if(v['x'] != 0 && v['y'] != 0){
+    //       overlaps = true
+    //       let bb_x_d = l_c[i]['x'] - bb_c_x;
+    //       let bb_y_d = l_c[i]['y'] - bb_c_y;
+    //       v = {
+    //         'x': v['x'] + (bb_x_d < 0 ? -c_u : c_u),
+    //         'y': v['y'] + (bb_y_d < 0 ? -c_u : c_u)
     //       }
     //     }
+    //     overlap_vectors.push(v)
     //   }
-    // }
-
-    // // Modify y values of logos if there is overlap in column
-    // for (let i = 0; i < column_num+1; i++) {
-    //   // Get all logos in a column sorted by ranking
-    //   let logoColumn = l_c.filter(e => e.column === i);
-    //   logoColumn.sort(function(a, b){return a.ranking - b.ranking});
-
-    //   // While there are overlapping logos modify y values so they are spaced without overlap.
-    //   let overlap_conditions = true
-    //   var overlap_loops = 0
-    //   for (let j = 0; j < logoColumn.length; j++) { // Setting all overlaps to 0. This indicates there are no overlaps.
-    //     logoColumn[j]['overlap'] = 0
-    //   }
-    //   let overlap_num = 0
-    //   while(overlap_conditions){
-    //     let starting_overlap_num = overlap_num
-    //     let gap_flag = true
-    //     for (let j = 1; j < logoColumn.length; j++) { // Checks for overlaps, if so assigns a overlap number to each logo
-    //       if(logoColumn[j-1]['y'] > logoColumn[j]['y'] - logoWidth) {
-    //         if(gap_flag) {
-    //           overlap_num = overlap_num + 1
-    //           gap_flag = false
-    //         }
-    //         if(logoColumn[j-1]['overlap'] || logoColumn[j]['overlap']){ // already overlapped, apply new number to all previously overlapped
-    //           let top_logos = logoColumn.filter(e => e.overlap === logoColumn[j-1]['overlap']);
-    //           for(let k = 0; k < top_logos.length; k++){
-    //             top_logos[k]['overlap'] = overlap_num
-    //           }
-    //           let bot_logos = logoColumn.filter(e => e.overlap === logoColumn[j]['overlap']);
-    //           for(let k = 0; k < bot_logos.length; k++){
-    //             bot_logos[k]['overlap'] = overlap_num
-    //           }
-    //         }
-    //         else{
-    //           logoColumn[j-1]['overlap'] = overlap_num // new items
-    //           logoColumn[j]['overlap'] = overlap_num // new items
-    //         }
-    //       }
-    //       else{
-    //         gap_flag = true
-    //       }
-    //     }
-    //     overlap_conditions = false // exit condition
-    //     if(overlap_num > starting_overlap_num){ // overlapping numbers
-    //       overlap_conditions = true 
-    //       for (let j = starting_overlap_num; j < overlap_num; j++) {
-    //         let overlap_logos = logoColumn.filter(e => e.overlap === j+1);
-    //         overlap_logos.sort(function(a, b){return a.ranking - b.ranking});
-    //         let y_high = overlap_logos[overlap_logos.length - 1]['s_y']
-    //         let y_low = overlap_logos[0]['s_y']
-    //         let y_mid = (y_high + y_low) / 2
-    //         let y_first = y_mid - ((overlap_logos.length-1)/2)*logoWidth
-    //         for(let k = 0; k < overlap_logos.length; k++){
-    //           overlap_logos[k]['y'] = y_first + k*logoWidth
-    //         }
-    //       }
-    //     }
-    //     overlap_loops = overlap_loops + 1
-    //     if(overlap_loops === 100){
-    //       overlap_conditions = false
+    //   if(overlaps){
+    //     for (let i = 0; i < l_c.length; i++) {
+    //       l_c[i]['x'] = l_c[i]['x'] + overlap_vectors[i]['x']
+    //       l_c[i]['y'] = l_c[i]['y'] + overlap_vectors[i]['y']
     //     }
     //   }
     // }
 
     // Add in Team Logos to the end of the chart
-    l_c.sort(function(a, b){return a.order - b.order});
     let containerWidth = document.getElementById('chartComponentGoogleChartContainer').clientWidth
     let containerHeight = document.getElementById('chartComponentGoogleChartContainer').clientHeight
     for (let i = 0; i < l_c.length; i++) {
@@ -335,10 +283,15 @@ function Chart(props) {
       teamLogo.src=props.chartParams.logos[logoCoordinates[i]['team'] + '.svg']
       teamLogo.width = logoWidth;
       teamLogo.height = logoWidth;
-      let logoLeft = l_c[i]['x']
+      let logoLeft = l_c[i]['x'] - logoWidth/2
       let logoTop = l_c[i]['y'] - logoWidth/2
       teamLogo.style.left = (logoLeft/containerWidth) * 100 + '%'
       teamLogo.style.top = (logoTop/containerHeight) * 100 + '%';
+      teamLogo.style.borderColor = props.chartParams.options['colors'][i];
+      teamLogo.style.borderWidth = wrapper.getOptions().lineWidth + 'px'
+      teamLogo.style.borderRadius = '3px'
+      console.log(l_c[i]['ranking'])
+      teamLogo.style.zIndex = Math.abs(l_c[i]['ranking'] - (l_c.length - 1));
     }
   }
 

@@ -42,6 +42,8 @@
   display:none;
   border: none;
   position: absolute;
+  background-color: white;
+  border: solid;
 }
 
 

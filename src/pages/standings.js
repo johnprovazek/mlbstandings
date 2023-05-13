@@ -4,8 +4,6 @@ import {useEffect}  from 'react';
 import {useRef}  from 'react';
 import {doc} from 'firebase/firestore';
 import {getDoc} from 'firebase/firestore';
-import {useParams} from 'react-router-dom';
-import {useNavigate} from 'react-router-dom';
 import Parser from 'html-react-parser';
 import {db} from '../components/firebase'
 import Chart from '../components/chart.js'
@@ -46,13 +44,12 @@ function importImagesDirectory(r) {
 const logoImages = importImagesDirectory(require.context('../images', false, /\.(png|jpe?g|svg)$/));
 
 function StandingsPage() {
-  const { url_division, url_season } = useParams(); // variables from parsing url path
   const didMount = useRef(false);
   
   const [astrisk, setAstrisk] = useState('');
   const [completeData, setCompleteData] = useState({});
-  const [season, setSeason] = useState(seasons_list.includes(url_season) ? url_season : String(current_year));
-  const [division, setDivision] = useState(divisions_list.includes(url_division) ? url_division : 'NLC');
+  const [season, setSeason] = useState(String(current_year));
+  const [division, setDivision] = useState('NLC');
   const [dateDataDisclaimer, setDateDataDisclaimer] = useState('');
   const [chartParams, setChartParams] = useState({
     'scaledLineWidth' : false, // Custom Google Charts Line Width scaling
@@ -63,8 +60,6 @@ function StandingsPage() {
     'data': [], // Google Charts Data
     'options' : emptyChartOptions, // Google Charts Options
   })
-
-  const navigate = useNavigate();
 
   const handleSeasonChange = (newSeason) => {
     setSeason(newSeason)
@@ -77,7 +72,6 @@ function StandingsPage() {
   }
 
   useEffect(() => {
-    navigate('/' + division + '/' + season)
     if (!didMount.current) {
       return;
     }

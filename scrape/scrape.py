@@ -53,7 +53,7 @@ def scrape(arg0,arg1):
             "NLE": {
                 "scores":{"NYM":[0],"PHI":[0],"ATL":[0],"MIA":[0],"WSN":[0]},
                 "teams":["NYM","PHI","ATL","MIA","WSN"],
-                "colors":["#FF5910","#002D72","#EAAA00","#000000","#AB0003"],
+                "colors":["#FF5910","#002D72","#EAAA00","#00A3E0","#AB0003"],
                 "ranking": [0,1,2,3,4],
                 "asterisk": ""
             },

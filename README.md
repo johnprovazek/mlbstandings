@@ -13,9 +13,10 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 [baseball-reference.com](https://www.baseball-reference.com/) is being used to gather baseball standings data.
 
 ## Bugs & Improvements
-- Develop an algorithm to improve the overlapping team icons.
-- Fix dashed line edges not coming to a point.
-- Fix scenario where two dashed lines overlapping are not overlapping correctly.
+- Implement an [algorithm](https://mikekling.com/comparing-algorithms-for-dispersing-overlapping-rectangles/) to improve the overlapping team icons.
+- Add in routes to github pages using [this method](https://github.com/rafgraph/spa-github-pages) so you can direct link to a division and season.
+- Fix issue with dashed line edges not coming to a continuous point.
+- Dashed lines overlapping doesn't look fluid due to Google Charts drawing preferences. This looks to be a limitation of Google Charts that would be difficult to improve.
 - Chart margins could be improved to prioritize equal sized margins as well as fitting content.
 - Consider adding a current standings table.
 - Consider adding historic data past 2013.
