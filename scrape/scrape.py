@@ -112,7 +112,7 @@ def scrape(arg0,arg1):
           league_dict["divisions"][l_i + d_i]["ranking"][team_index] = ranking
 
     # Getting the win loss changes
-    win_loss_max_tracker = 0
+    max_win_loss_tracker = 0
     max_games_tracker = 0
     for division in league_dict["divisions"]:
         for team in league_dict["divisions"][division]["teams"]:
@@ -132,13 +132,13 @@ def scrape(arg0,arg1):
                         win_loss_char = win_loss_element.contents[0][0]
                         if(win_loss_char == "W"):
                             win_loss_tracker = win_loss_tracker + 1
-                            if(abs(win_loss_tracker) > win_loss_max_tracker):
-                                win_loss_max_tracker = abs(win_loss_tracker)
+                            if(abs(win_loss_tracker) > max_win_loss_tracker):
+                                max_win_loss_tracker = abs(win_loss_tracker)
                             game_counter = game_counter + 1
                         elif(win_loss_char == "L"):
                             win_loss_tracker = win_loss_tracker - 1
-                            if(abs(win_loss_tracker) > win_loss_max_tracker):
-                                win_loss_max_tracker = abs(win_loss_tracker)
+                            if(abs(win_loss_tracker) > max_win_loss_tracker):
+                                max_win_loss_tracker = abs(win_loss_tracker)
                             game_counter = game_counter + 1
                         else:
                             print("error with W/L scraping with: " + team)
@@ -148,8 +148,23 @@ def scrape(arg0,arg1):
             if game_counter > max_games_tracker:
                 max_games_tracker = game_counter
 
-    league_dict["maxwinloss"] = math.ceil((win_loss_max_tracker+1)/10)*10
-    league_dict["maxgames"] = math.ceil((max_games_tracker+1)/10)*10
+    # Setting the chart max x and y values
+    if(max_games_tracker == 162): # Completed regular season
+      league_dict["maxwinloss"] = 80
+      league_dict["maxgames"] = 180
+    elif(league_dict["year"] == 2020): # Short COVID season
+      league_dict["maxwinloss"] = 30
+      league_dict["maxgames"] = 70 
+    elif(league_dict["year"] == date.today().year): # Current season still in progress
+      league_dict["maxwinloss"] = math.ceil(max_win_loss_tracker/8)*10
+      league_dict["maxgames"] = math.ceil(max_games_tracker/9)*10
+
+    # Setting asterisk values
+    if(league_dict["year"] == 2020):
+      for division in league_dict["divisions"]:
+        league_dict["divisions"][division]["asterisk"] = "* Shortened season due to the COVID-19 pandemic"
+    elif(league_dict["year"] == 2016):
+        league_dict["divisions"]["NLC"]["asterisk"] = "* Cubs vs. Pirates game played on 9/29/2016 officially scored a Tie"
 
     # Updating Firebase
     cred = credentials.Certificate("firebasekey.json")

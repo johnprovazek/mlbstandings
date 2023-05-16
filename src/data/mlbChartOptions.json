@@ -25,7 +25,7 @@
     },
     "slantedText": false,
     "maxAlternation": 1,
-    "baselineColor": "white",
+    "baselineColor": "transparent",
     "gridlines": {
       "count": 0,
       "minSpacing": 10
@@ -47,7 +47,7 @@
     },
     "slantedText": false,
     "maxAlternation": 1,
-    "baselineColor": "#CCC",
+    "baselineColor": "transparent",
     "gridlines": {
       "minSpacing": 10
     },

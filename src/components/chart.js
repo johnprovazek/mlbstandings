@@ -154,27 +154,27 @@ function Chart(props) {
         scaledChartArea = {
           ...scaledChartArea,
           top: '2.5%',
-          bottom: '13.89%', // same size as title
-          left: '6%',
-          right: '6%'
+          bottom: '13.6111111111%',
+          left: '6.125%',
+          right: '6.125%'
         }
       }
       else if (containerWidth >= 500 && containerWidth <= 719){
         scaledChartArea = {
           ...scaledChartArea,
           top: '2.5%',
-          bottom: '13.89%', // same size as title
+          bottom: '13.6111111111%',
           left: '8%',
-          right: '6%'
+          right: '4.25%'
         }
       }
       else if (containerWidth <= 499) {
         scaledChartArea = {
           ...scaledChartArea,
           top: '2.5%',
-          bottom: '20.835%', // 1.5 times the size of title
-          left: '9%',
-          right: '6%'
+          bottom: '22.05%',
+          left: '17.3000827815%',
+          right: '9.1875%'
         }
       }
       options['chartArea'] = scaledChartArea
@@ -215,64 +215,21 @@ function Chart(props) {
   const addTeamLogos = () => {
     let layout = wrapper.getChart().getChartLayoutInterface();
     let chartWidth = layout.getChartAreaBoundingBox()['width'] // chart width
-    let logoWidth = 40 // logo width
+    let logoWidth = 40
     if (chartWidth < 677){
       logoWidth = chartWidth/16.925
     }
+
     // Fill in new dictionary with x and y coordinates from the google chart
     var l_c = [] // new logo coordinates
     for (let i = 0; i < logoCoordinates.length; i++) {
       l_c.push({
         'team' : logoCoordinates[i]['team'],
         'ranking' : logoCoordinates[i]['ranking'],
-        'x' : Math.floor(layout.getXLocation(logoCoordinates[i]['x'])) + logoWidth/2,
+        'x' : Math.floor(layout.getXLocation(logoCoordinates[i]['x'])),
         'y' : Math.floor(layout.getYLocation(logoCoordinates[i]['y'])),
       });
     }
-
-    // Overlap algorithm
-    // let min_x = l_c.reduce((min, p) => p.x < min ? p.x : min, l_c[0].x)
-    // let min_y = l_c.reduce((min, p) => p.y < min ? p.y : min, l_c[0].y)
-    // let max_x = l_c.reduce((max, p) => p.x > max ? p.x : max, l_c[0].x)
-    // let max_y = l_c.reduce((max, p) => p.y > max ? p.y : max, l_c[0].y)
-    // let bb_c_x = (max_x + min_x) / 2 
-    // let bb_c_y = (max_y + min_y) / 2
-    // let m_u = 5
-    // let c_u = 0.25
-    // let overlaps = true
-    // while(overlaps){
-    //   overlaps = false
-    //   let overlap_vectors = []
-    //   for (let i = 0; i < l_c.length; i++) {
-    //     let v = {'x' : 0, 'y': 0}
-    //     for (let j = 0; j < l_c.length; j++) {
-    //       let x_d = l_c[i]['x'] - l_c[j]['x'];
-    //       let y_d = l_c[i]['y'] - l_c[j]['y'];
-    //       if(i != j && Math.abs(x_d) < logoWidth && Math.abs(y_d) < logoWidth){
-    //         v = {
-    //           'x': v['x'] + (x_d < 0 ? -m_u : m_u),
-    //           'y': v['y'] + (y_d < 0 ? -m_u : m_u)
-    //         }
-    //       }
-    //     }
-    //     if(v['x'] != 0 && v['y'] != 0){
-    //       overlaps = true
-    //       let bb_x_d = l_c[i]['x'] - bb_c_x;
-    //       let bb_y_d = l_c[i]['y'] - bb_c_y;
-    //       v = {
-    //         'x': v['x'] + (bb_x_d < 0 ? -c_u : c_u),
-    //         'y': v['y'] + (bb_y_d < 0 ? -c_u : c_u)
-    //       }
-    //     }
-    //     overlap_vectors.push(v)
-    //   }
-    //   if(overlaps){
-    //     for (let i = 0; i < l_c.length; i++) {
-    //       l_c[i]['x'] = l_c[i]['x'] + overlap_vectors[i]['x']
-    //       l_c[i]['y'] = l_c[i]['y'] + overlap_vectors[i]['y']
-    //     }
-    //   }
-    // }
 
     // Add in Team Logos to the end of the chart
     let containerWidth = document.getElementById('chartComponentGoogleChartContainer').clientWidth
@@ -283,14 +240,13 @@ function Chart(props) {
       teamLogo.src=props.chartParams.logos[logoCoordinates[i]['team'] + '.svg']
       teamLogo.width = logoWidth;
       teamLogo.height = logoWidth;
-      let logoLeft = l_c[i]['x'] - logoWidth/2
+      let logoLeft = l_c[i]['x']
       let logoTop = l_c[i]['y'] - logoWidth/2
       teamLogo.style.left = (logoLeft/containerWidth) * 100 + '%'
       teamLogo.style.top = (logoTop/containerHeight) * 100 + '%';
       teamLogo.style.borderColor = props.chartParams.options['colors'][i];
       teamLogo.style.borderWidth = wrapper.getOptions().lineWidth + 'px'
-      teamLogo.style.borderRadius = '3px'
-      console.log(l_c[i]['ranking'])
+      teamLogo.style.borderRadius = wrapper.getOptions().lineWidth + 'px'
       teamLogo.style.zIndex = Math.abs(l_c[i]['ranking'] - (l_c.length - 1));
     }
   }
@@ -393,3 +349,53 @@ function Chart(props) {
 }
 
 export default Chart;
+
+
+// top: '2.5%',
+// bottom: '22.05%',
+// left: '17.3000827815%',
+// right: '9.1875%'
+
+    // Overlap algorithm
+    // let min_x = l_c.reduce((min, p) => p.x < min ? p.x : min, l_c[0].x)
+    // let min_y = l_c.reduce((min, p) => p.y < min ? p.y : min, l_c[0].y)
+    // let max_x = l_c.reduce((max, p) => p.x > max ? p.x : max, l_c[0].x)
+    // let max_y = l_c.reduce((max, p) => p.y > max ? p.y : max, l_c[0].y)
+    // let bb_c_x = (max_x + min_x) / 2 
+    // let bb_c_y = (max_y + min_y) / 2
+    // let m_u = 5
+    // let c_u = 0.25
+    // let overlaps = true
+    // while(overlaps){
+    //   overlaps = false
+    //   let overlap_vectors = []
+    //   for (let i = 0; i < l_c.length; i++) {
+    //     let v = {'x' : 0, 'y': 0}
+    //     for (let j = 0; j < l_c.length; j++) {
+    //       let x_d = l_c[i]['x'] - l_c[j]['x'];
+    //       let y_d = l_c[i]['y'] - l_c[j]['y'];
+    //       if(i != j && Math.abs(x_d) < logoWidth && Math.abs(y_d) < logoWidth){
+    //         v = {
+    //           'x': v['x'] + (x_d < 0 ? -m_u : m_u),
+    //           'y': v['y'] + (y_d < 0 ? -m_u : m_u)
+    //         }
+    //       }
+    //     }
+    //     if(v['x'] != 0 && v['y'] != 0){
+    //       overlaps = true
+    //       let bb_x_d = l_c[i]['x'] - bb_c_x;
+    //       let bb_y_d = l_c[i]['y'] - bb_c_y;
+    //       v = {
+    //         'x': v['x'] + (bb_x_d < 0 ? -c_u : c_u),
+    //         'y': v['y'] + (bb_y_d < 0 ? -c_u : c_u)
+    //       }
+    //     }
+    //     overlap_vectors.push(v)
+    //   }
+    //   if(overlaps){
+    //     for (let i = 0; i < l_c.length; i++) {
+    //       l_c[i]['x'] = l_c[i]['x'] + overlap_vectors[i]['x']
+    //       l_c[i]['y'] = l_c[i]['y'] + overlap_vectors[i]['y']
+    //     }
+    //   }
+    // }
