@@ -14,10 +14,10 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 
 ## Bugs & Improvements
 - Revisit [overlapping rectangles algorithm](https://mikekling.com/comparing-algorithms-for-dispersing-overlapping-rectangles/) to improve the overlapping team icons.
-- Add in routes to github pages using [this method](https://github.com/rafgraph/spa-github-pages) so you can direct link to a division and season while still using github pages.
+- Revisit adding routes to github pages using [this method](https://github.com/rafgraph/spa-github-pages).
 - Fix issue with dashed line edges not coming to a continuous point.
 - When two dashed lines overlap it doesn't look fluid due to Google Charts precedence for which lines draw over other lines. Adding in many redundant columns would be a way to fix this.
-- Investigate further if the margins of the axis titles can be modified. This could improve the style on mobile and small screens while keeping the chart area the same aspect ratio as larger screens.
+- Consider adding in a loading animation while firebase data is loading.
 - Consider adding a current standings table.
 - Consider adding historic data past 2013.
 - Use a linter and a style guide.
