@@ -4,8 +4,25 @@
   font: 24px Arial, sans-serif;
 }
 
+#loadingChart{
+  height: 100%;
+  width: 100%;
+}
+
+#loadingSVG{
+  padding: 6.125%;
+  width: 87.75%;
+  height: 75.5%;
+}
+
+#chartContentContainer{
+  height: 100%;
+  width: 100%;
+}
+
 #chartComponentTitle {
   font-size: 24px;
+  font-size: 4vw;
   margin-top:0;
   margin-bottom:0;
   height: 10%;
@@ -21,19 +38,13 @@
   position: relative;
 }
 
-#chartComponentStandingsChart {
-  height: 100%;
-  width: 100%;
-}
-
-#chartImage{
-  display:none;
-  height: 100%;
-  width: 100%;
-}
-
 #svgChart{
   display:none;
+  height: 100%;
+  width: 100%;
+}
+
+#chartComponentStandingsChart {
   height: 100%;
   width: 100%;
 }
@@ -44,4 +55,12 @@
   position: absolute;
   background-color: white;
   border: solid;
+}
+
+.hidden{
+  display: none;
+}
+
+.shown{
+  display: block;
 }
