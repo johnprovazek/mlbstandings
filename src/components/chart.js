@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import useGoogleCharts from './useGoogleCharts';
 import './chart.css';
-import LoadingSvg from "../images/loading.svg";
 
 function Chart(props) {
-  const [title, setTitle] = useState('');
-  const [wrapper, setWrapper] = useState(null);
-  const [logoCoordinates, setLogoCoordinates] = useState([]);
-  const [containerWidth, setContainerWidth] = useState(null);
-  const [containerHeight, setContainerHeight] = useState(null);
-  const [chartLoaded, setChartLoaded] = useState(false);
+  const [title, setTitle] = useState(''); // Title of the chart.
+  const [wrapper, setWrapper] = useState(null); // Google Charts ChartWrapper.
+  const [logoCoordinates, setLogoCoordinates] = useState([]); // Contains XY coordinates for where to place the team logos.
+  const [containerWidth, setContainerWidth] = useState(null); // Chart component container width.
+  const [containerHeight, setContainerHeight] = useState(null); // Chart component container height.
 
-  const google = useGoogleCharts();
+  const google = useGoogleCharts(); // Google Charts library.
 
+  // Handles processing the Google Charts data.
   const processData = (data) => {
-    // Get the team names and x and y coordinates of the last items and include ranking.
+    // Get the team names, XY coordinates, and rankings.
     let coords = [null,null,null,null,null];
-    for (let i = 1; i < props.chartParams.ranking.length+1; i++) {
-      for(let j = data.length-1; j > 0; j--) {
+    for (let i = 1; i < props.chartParams.ranking.length + 1; i++) {
+      for(let j = data.length - 1; j > 0; j--) {
         if (data[j][i] !== null) {
           coords[i-1] = {
             'ranking': props.chartParams.ranking[i-1],
@@ -30,7 +29,6 @@ function Chart(props) {
       }
     }
     setLogoCoordinates(coords);
-
     // Modify the table data to show dashed lines.
     if(props.chartParams.dashed){
       return addDashedData(data);
@@ -40,11 +38,11 @@ function Chart(props) {
     }
   }
 
+  // Handles converting the Google Charts data such that it will appear dashed with Google Charts.
   const addDashedData = (data) => {
     // Creating the new dashed table.
     const dashTable = [];
     dashTable.push(data[0]);
-
     // Filling the table with extra data to add dashed lines.
     for (let i = 1; i < data.length - 1; i++) {
       dashTable.push(data[i]); // Adding the same data twice to avoid dots in the chart.
@@ -77,13 +75,11 @@ function Chart(props) {
           fromTo.push([from,to]);
         }
       }
-
       // Sets up an array to track the active item in a matching group.
       let activeMatchesIndex = [];
       for (let j = 0; j < matches.length; j++) {
         activeMatchesIndex.push(0);
       }
-
       // Breaking down data into parts for dashed lines.
       let segments = 12; // Seperating into 12 segments per line because 12 is the LCM of 1,2,3, and 4.
       let dashSegments = [null,null,null,null,null];
@@ -123,8 +119,9 @@ function Chart(props) {
     return dashTable;
   }
 
+  // Handles processing the Google Charts options.
   const processOptions = (options) => {
-    let containerWidth = document.getElementById('chartComponentContainer').clientWidth;
+    let curContainerWidth = document.getElementById('chart-component-container').clientWidth;
     // Deleting title from google charts options and using custom title implementation.
     if(options['title'] !== null && typeof options['title'] !== 'undefined'){
       setTitle(options['title']);
@@ -132,13 +129,20 @@ function Chart(props) {
     }
     // Sets title backgroundColor to chart backgroundColor if one exists.
     if(options['backgroundColor'] !== null && typeof options['backgroundColor'] !== 'undefined'){
-      document.getElementById('chartComponentTitle').style.backgroundColor = options['backgroundColor'];
+      document.getElementById('chart-component-title').style.backgroundColor = options['backgroundColor'];
     }
     else{
-      document.getElementById('chartComponentTitle').style.backgroundColor = 'white';
+      document.getElementById('chart-component-title').style.backgroundColor = 'transparent';
     }
     // Resizing the chart title.
-    document.getElementById('chartComponentTitle').style.fontSize = Math.min(containerWidth/30, 24) + 'px';
+    let scaleTitleFont = curContainerWidth / 30;
+    if(scaleTitleFont > 24){
+      scaleTitleFont = 24;
+    }
+    else if(scaleTitleFont <= 24 && scaleTitleFont > 16){
+      scaleTitleFont = 16;
+    }
+    document.getElementById('chart-component-title').style.fontSize = scaleTitleFont + 'px';
     // Modify the chartArea and axis values.
     if(props.chartParams.scaledChartArea){
       // Sets the sidebars all equal in width.
@@ -158,20 +162,20 @@ function Chart(props) {
       };
       options['hAxis']['textStyle'] = {
         ...textStyleTemplate,
-        fontSize: Math.min(containerWidth/60, 16)
-      }
+        fontSize: Math.min(curContainerWidth/60, 16)
+      };
       options['hAxis']['titleTextStyle'] = {
         ...textStyleTemplate,
-        fontSize: Math.min(containerWidth/60, 16)
-      }
+        fontSize: Math.min(curContainerWidth/60, 16)
+      };
       options['vAxis']['textStyle'] = {
         ...textStyleTemplate,
-        fontSize: Math.min(containerWidth/60, 16)
-      }
+        fontSize: Math.min(curContainerWidth/60, 16)
+      };
       options['vAxis']['titleTextStyle'] = {
         ...textStyleTemplate,
-        fontSize: Math.min(containerWidth/60, 16)
-      }
+        fontSize: Math.min(curContainerWidth/60, 16)
+      };
     }
     // Modify the lineWidth.
     if(props.chartParams.scaledLineWidth){
@@ -179,10 +183,9 @@ function Chart(props) {
       if (options['hAxis']['viewWindow']['max'] != null){
         maxGames = options['hAxis']['viewWindow']['max'];
       }
-      let chartWidth = document.getElementById('chartComponentStandingsChart').clientWidth;
       let lineScaleMultiplier = 1;
-      if(chartWidth < 769){
-        lineScaleMultiplier = 0.0020833333333333333 * (chartWidth) - 0.6;
+      if(curContainerWidth < 769){
+        lineScaleMultiplier = 0.0020833333333333333 * (curContainerWidth) - 0.6;
       }
       let scaledLineWidth = (0.000141026 * Math.pow(maxGames, 2) - 0.0488462*(maxGames) + 6.728210) * lineScaleMultiplier;
       options['lineWidth'] = scaledLineWidth;
@@ -190,18 +193,18 @@ function Chart(props) {
     return options;
   }
 
+  // Creates a new chart wrapper.
   useEffect(() => {
     if (google && props.chartParams && props.chartParams.data.length) {
-      setChartLoaded(true);
       // Turning off display of Logos.
-      const logoElements = document.getElementsByClassName('teamLogo');
+      const logoElements = document.getElementsByClassName('chart-component-team-logo');
       for (let i = 0; i < logoElements.length; i++) {
         logoElements[i].style.display = 'none';
       }
       const pData = processData(props.chartParams.data);
       const pOptions = processOptions(props.chartParams.options);
       const newWrapper = new google.visualization.ChartWrapper({
-        containerId: 'chartComponentStandingsChart',
+        containerId: 'chart-component-standings-chart',
         chartType: 'LineChart',
         dataTable: google.visualization.arrayToDataTable(pData),
         options: pOptions,
@@ -210,6 +213,7 @@ function Chart(props) {
     }
   }, [google, props.chartParams]);
 
+  // Adds team logos to the chart in the appropriate position.
   const addTeamLogos = () => {
     let layout = wrapper.getChart().getChartLayoutInterface();
     let chartWidth = layout.getChartAreaBoundingBox()['width'];
@@ -227,20 +231,19 @@ function Chart(props) {
         'y' : Math.floor(layout.getYLocation(logoCoordinates[i]['y'])),
       });
     }
-
     // Add in team logos to the end of the chart.
-    let containerWidth = document.getElementById('chartComponentGoogleChartContainer').clientWidth;
-    let containerHeight = document.getElementById('chartComponentGoogleChartContainer').clientHeight;
+    let curContainerWidth = document.getElementById('chart-component-google-chart-container').clientWidth;
+    let curContainerHeight = document.getElementById('chart-component-google-chart-container').clientHeight;
     for (let i = 0; i < newLogoCoordinates.length; i++) {
-      var teamLogo = document.getElementById('teamLogo' + i);
+      var teamLogo = document.getElementById('chart-component-team-logo' + i);
       teamLogo.style.display = 'block';
-      teamLogo.src=props.chartParams.logos[logoCoordinates[i]['team'] + '.svg'];
+      teamLogo.src = props.chartParams.logos[logoCoordinates[i]['team'] + '.svg'];
       teamLogo.width = logoWidth;
       teamLogo.height = logoWidth;
       let logoLeft = newLogoCoordinates[i]['x'];
       let logoTop = newLogoCoordinates[i]['y'] - logoWidth/2;
-      teamLogo.style.left = (logoLeft/containerWidth) * 100 + '%';
-      teamLogo.style.top = (logoTop/containerHeight) * 100 + '%';
+      teamLogo.style.left = (logoLeft/curContainerWidth) * 100 + '%';
+      teamLogo.style.top = (logoTop/curContainerHeight) * 100 + '%';
       teamLogo.style.borderColor = props.chartParams.options['colors'][i];
       teamLogo.style.borderWidth = wrapper.getOptions().lineWidth + 'px';
       teamLogo.style.borderRadius = wrapper.getOptions().lineWidth + 'px';
@@ -248,6 +251,7 @@ function Chart(props) {
     }
   }
 
+  // Draws the Google Chart.
   useEffect(() => {
     if (google && props.chartParams) {
       google.visualization.events.addListener(wrapper, 'ready', addTeamLogos);
@@ -255,10 +259,12 @@ function Chart(props) {
     }
   }, [wrapper]);
 
+  // Handles resizing the chart and limiting the amount of times the chart is drawn.
   useEffect(() => {
     let timeoutId = null;
+    // Handles when the Google Chart is resized.
     const handleResize = () => {
-      let chartContainerElement = document.getElementById('chartComponentContainer');
+      let chartContainerElement = document.getElementById('chart-component-container');
       let curContainerWidth = 0;
       let curContainerHeight = 0;
       if (chartContainerElement !== null) {
@@ -273,28 +279,28 @@ function Chart(props) {
           redraw(curContainerWidth,curContainerHeight);
         }
         else{
-          toggleSvg(true); // Temporarily show SVG.
+          toggleSvg(true); // Temporarily shows SVG Chart.
           clearTimeout(timeoutId);
           timeoutId = setTimeout(() => redraw(curContainerWidth,curContainerHeight), 100);
         }
       }
     }
-
+    // Removes SVG and redraws the Google Chart.
     const redraw = (width, height) => {
-      toggleSvg(false); // Remove SVG.
+      toggleSvg(false); // Hides SVG Chart.
       const pOptions = processOptions(props.chartParams.options);
       wrapper.setOptions(pOptions);
       wrapper.draw();
       setContainerWidth(width);
       setContainerHeight(height);
     }
-
+    // Shows or Hides the SVG Chart.
     const toggleSvg = (option) => {
-      let svgChartElement = document.getElementById('svgChart');
-      let googleChartElement = document.getElementById('chartComponentStandingsChart');
+      let svgChartElement = document.getElementById('chart-component-svg-chart');
+      let googleChartElement = document.getElementById('chart-component-standings-chart');
       if(option){
-        var svgGoogle = document.getElementById('chartComponentStandingsChart').getElementsByTagName('div')[0].getElementsByTagName('div')[0].getElementsByTagName('div')[0].getElementsByTagName('svg')[0].cloneNode(true);
-        svgGoogle.id = 'svgChart';
+        var svgGoogle = document.getElementById('chart-component-standings-chart').getElementsByTagName('div')[0].getElementsByTagName('div')[0].getElementsByTagName('div')[0].getElementsByTagName('svg')[0].cloneNode(true);
+        svgGoogle.id = 'chart-component-svg-chart';
         let width = svgGoogle.width['animVal']['value'];
         let height = svgGoogle.height['animVal']['value'];
         let viewboxString = '0 0 ' + width + ' ' + height;
@@ -311,34 +317,29 @@ function Chart(props) {
         googleChartElement.style.display = 'block';
       }
     }
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     }
   })
 
+  // Runs on initial render.
   useEffect(() => {
-    setContainerWidth(document.getElementById('chartComponentContainer').clientWidth);
-    setContainerHeight(document.getElementById('chartComponentContainer').clientHeight);
+    setContainerWidth(document.getElementById('chart-component-container').clientWidth);
+    setContainerHeight(document.getElementById('chart-component-container').clientHeight);
   }, []);
 
   return (
-    <div id='chartComponentContainer'>
-      <div id='loadingChart' className={chartLoaded ? 'hidden' : 'shown'}>
-        <img id='loadingSVG' src={LoadingSvg} alt='LoadingSVG' />
-      </div>
-      <div id='chartContentContainer' className={chartLoaded ? 'shown' : 'hidden'}>
-        <h2 id='chartComponentTitle'>{title}</h2>
-        <div id='chartComponentGoogleChartContainer'>
-          <svg id='svgChart'></svg>
-          <div id='chartComponentStandingsChart'/>
-          <img id='teamLogo0' className='teamLogo' alt='teamLogo0'></img>
-          <img id='teamLogo1' className='teamLogo' alt='teamLogo1'></img>
-          <img id='teamLogo2' className='teamLogo' alt='teamLogo2'></img>
-          <img id='teamLogo3' className='teamLogo' alt='teamLogo3'></img>
-          <img id='teamLogo4' className='teamLogo' alt='teamLogo4'></img>
-        </div>
+    <div id='chart-component-container'>
+      <h2 id='chart-component-title'>{title}</h2>
+      <div id='chart-component-google-chart-container'>
+        <svg id='chart-component-svg-chart'></svg>
+        <div id='chart-component-standings-chart'/>
+        <img id='chart-component-team-logo0' className='chart-component-team-logo' alt='teamLogo0'></img>
+        <img id='chart-component-team-logo1' className='chart-component-team-logo' alt='teamLogo1'></img>
+        <img id='chart-component-team-logo2' className='chart-component-team-logo' alt='teamLogo2'></img>
+        <img id='chart-component-team-logo3' className='chart-component-team-logo' alt='teamLogo3'></img>
+        <img id='chart-component-team-logo4' className='chart-component-team-logo' alt='teamLogo4'></img>
       </div>
     </div>
   );

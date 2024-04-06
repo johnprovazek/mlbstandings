@@ -1,28 +1,11 @@
-#chartComponentContainer{
+#chart-component-container{
   height: 100%;
   width: 100%;
-  font: 24px Arial, sans-serif;
+  font-family: Arial;
 }
 
-#loadingChart{
-  height: 100%;
-  width: 100%;
-}
-
-#loadingSVG{
-  padding: 6.125%;
-  width: 87.75%;
-  height: 75.5%;
-}
-
-#chartContentContainer{
-  height: 100%;
-  width: 100%;
-}
-
-#chartComponentTitle {
-  font-size: 24px;
-  font-size: 4vw;
+#chart-component-title {
+  text-align: center;
   margin-top:0;
   margin-bottom:0;
   height: 10%;
@@ -32,24 +15,24 @@
   background-color: white;
 }
 
-#chartComponentGoogleChartContainer{
+#chart-component-google-chart-container{
   height: 90%;
   width: 100%;
   position: relative;
 }
 
-#svgChart{
+#chart-component-svg-chart{
   display:none;
   height: 100%;
   width: 100%;
 }
 
-#chartComponentStandingsChart {
+#chart-component-standings-chart {
   height: 100%;
   width: 100%;
 }
 
-.teamLogo{
+.chart-component-team-logo{
   display:none;
   border: none;
   position: absolute;

@@ -8,7 +8,7 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 
 ## Credits
 
-[How to Use Google Charts in React](https://blog.shahednasser.com/how-to-use-google-charts-in-react/#:~:text=In%20order%20to%20load%20Google,ll%20set%20google%20to%20window.) is a guide I followed to get started implementing Google Charts.
+[How to Use Google Charts in React](https://blog.shahednasser.com/how-to-use-google-charts-in-react/#:~:text=In%20order%20to%20load%20Google,ll%20set%20google%20to%20window.) is a helpful guide I followed to get started implementing the Google Charts library in this project.
 
 [baseball-reference.com](https://www.baseball-reference.com/) is a baseball statistics website being used to gather baseball standings data.
 
