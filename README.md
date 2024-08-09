@@ -6,11 +6,11 @@ This project was created to graph the changes in MLB division standings througho
 
 Built using React, Python, Google Charts, Google Cloud Functions, and Google Firebase.
 
-<a href="#">
-  <div align="center">
+<div align="center">
+  <picture>
     <img src="https://github.com/user-attachments/assets/7e5af3b8-1f8c-47e1-83ca-c41c41d1a603" width="830px">
-  </div>
-</a>
+  </picture>
+</div>
 
 ## Credits
 
