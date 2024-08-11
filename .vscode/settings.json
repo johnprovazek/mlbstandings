@@ -1,0 +1,20 @@
+{
+  "pylint.args": ["--rcfile=scrape/.pylintrc"],
+  "search.exclude": {
+    "local-dev/": true
+  },
+  "cSpell.words": [
+    "Astros",
+    "epochdate",
+    "firebasekey",
+    "firestore",
+    "gridlines",
+    "johnprovazek",
+    "maxgames",
+    "maxwinloss",
+    "Mets",
+    "mlbstandings",
+    "Phillies",
+    "predeploy"
+  ]
+}

@@ -1,4 +1,4 @@
-html{
+html {
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
@@ -6,6 +6,6 @@ html{
 
 body {
   margin: 0;
-  background-color: black;
   font-family: Arial;
+  background-color: #000000;
 }
