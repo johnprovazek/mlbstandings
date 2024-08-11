@@ -12,6 +12,12 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
   </picture>
 </div>
 
+<div align="center">
+  <picture>
+    <img src="https://github.com/user-attachments/assets/7e5af3b8-1f8c-47e1-83ca-c41c41d1a603" width="830px">
+  </picture>
+</div>
+
 ## Credits
 
 [How to Use Google Charts in React](https://blog.shahednasser.com/how-to-use-google-charts-in-react/#:~:text=In%20order%20to%20load%20Google,ll%20set%20google%20to%20window.) is a helpful guide I followed to get started implementing the Google Charts library in this project.
