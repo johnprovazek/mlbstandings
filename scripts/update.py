@@ -141,7 +141,6 @@ def scrape(arg0, arg1):
     max_games_tracker = 0
     for division_code in league_dict["divisions"]:
         for team_code in league_dict["divisions"][division_code]["teams"]:
-            print(division_code + " " + team_code)
             time.sleep(4)  # Limits requests to not be flagged as a bot.
             url = (
                 "https://www.baseball-reference.com/teams/"
@@ -180,8 +179,6 @@ def scrape(arg0, arg1):
             if game_counter > max_games_tracker:
                 max_games_tracker = game_counter
 
-    print(max_games_tracker)
-
     # Setting the chart max x and y values.
     if max_games_tracker >= 162:  # Completed regular season.
         league_dict["maxwinloss"] = 80
@@ -208,10 +205,8 @@ def scrape(arg0, arg1):
             "asterisk"
         ] = "* Dodgers and Rockies played 163rd regular season game on 10/1/2018"
 
-    print(league_dict)
-
     # Updating Firebase.
-    cred = credentials.Certificate("firebasekey.json")
+    cred = credentials.Certificate("serviceAccountKey.json")
     firebase_admin.initialize_app(cred)
     db = firestore.client()
     db.collection("seasons").document(str(league_dict["year"])).set(league_dict)

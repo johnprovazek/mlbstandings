@@ -5,7 +5,7 @@
 /build
 
 # authentication
-scrape/firebasekey.json
+scripts/serviceAccountKey.json
 
 # debug
 src/assets/images/debug
