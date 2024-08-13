@@ -1,8 +1,7 @@
-"""scrape.py pulls MLB standings data from baseball-reference.com and adds it to a Firebase Firestore database. """
+"""main.py pulls MLB standings data from baseball-reference.com and adds it to a Firebase Firestore database. """
 
-# Bot reference page: https://www.sports-reference.com/bot-traffic.html
-
-# pylint: disable=E0401
+# The function entry point in a Google Cloud Function must come from a file named "main.py".
+# Bot limit reference page: https://www.sports-reference.com/bot-traffic.html.
 
 from datetime import date
 import math
@@ -15,7 +14,7 @@ import requests
 
 
 # Function arguments aren't used. They need to be there when ran as a Google Cloud Function.
-def scrape(arg0, arg1):
+def update(arg0, arg1):
     """Pulls MLB standings data from baseball-reference.com and adds it to a Firebase Firestore database."""
     league_dict = {
         "year": date.today().year,
@@ -212,4 +211,5 @@ def scrape(arg0, arg1):
     db.collection("seasons").document(str(league_dict["year"])).set(league_dict)
 
 
-scrape("", "")
+# Remove when ran as Google Cloud Function.
+update("", "")
