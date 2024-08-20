@@ -8,7 +8,7 @@ Built using React, Python, Google Charts, Google Cloud Functions, and Google Fir
 
 <div align="center">
   <picture>
-    <img src="https://github.com/user-attachments/assets/7e5af3b8-1f8c-47e1-83ca-c41c41d1a603" width="830px">
+    <img src="https://repository-images.githubusercontent.com/483421754/ce78b600-adcd-445a-80cc-8236060bc43e" width="830px">
   </picture>
 </div>
 
