@@ -3,6 +3,7 @@
 
 # production
 /build
+/dist
 
 # authentication
 scripts/serviceAccountKey.json
