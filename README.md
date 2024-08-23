@@ -4,7 +4,7 @@
 
 This project was created to graph the changes in MLB division standings throughout a season. A Python script using the Beautiful Soup library is used to gather the standings data from [baseball-reference.com](https://www.baseball-reference.com/). If a MLB season is underway the standings data for the current season will be updated on a daily basis. Google Cloud Functions is running the Python script and updating the new data in a Firebase Firestore database. You can access this website at [johnprovazek.com/mlbstandings](https://www.johnprovazek.com/mlbstandings/).
 
-Built using React, Python, Google Charts, Google Cloud Functions, and Google Firebase.
+Built using React, Vite, Python, Google Charts, Google Cloud Functions, and Firebase.
 
 <div align="center">
   <picture>
