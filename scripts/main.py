@@ -180,7 +180,7 @@ def update(arg0, arg1):
 
     # Setting the chart max x and y values.
     if max_games_tracker >= 162:  # Completed regular season.
-        league_dict["maxwinloss"] = 80
+        league_dict["maxwinloss"] = 90
         league_dict["maxgames"] = 180
     elif league_dict["year"] == 2020:  # Short COVID season.
         league_dict["maxwinloss"] = 30

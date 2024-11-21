@@ -57,7 +57,7 @@
 }
 
 .chart-component-team-logo {
-  width: min(5%, 40px);
+  width: min(4%, 40px);
   height: auto;
   aspect-ratio: 1;
   position: absolute;

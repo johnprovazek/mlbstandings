@@ -21,7 +21,6 @@ Built using React, Vite, Python, Google Charts, Google Cloud Functions, and Fire
 ## Bugs & Improvements
 
 - Revisit [overlapping rectangles algorithm](https://mikekling.com/comparing-algorithms-for-dispersing-overlapping-rectangles/) to improve the overlapping team icons.
-- Revisit adding routes to github pages using [this method](https://github.com/rafgraph/spa-github-pages).
 - Fix issue with dashed line edges not coming to a continuous point.
 - When two dashed lines overlap it doesn't look fluid due to Google Charts precedence for which lines draw over other lines. Adding in many redundant columns would be a way to fix this.
 - Consider adding a current standings table.
