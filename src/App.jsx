@@ -1,4 +1,4 @@
-import StandingsPage from "./pages/standings/standings.jsx";
+import StandingsPage from "./pages/StandingsPage/StandingsPage.jsx";
 
 const App = () => {
   return <StandingsPage />;

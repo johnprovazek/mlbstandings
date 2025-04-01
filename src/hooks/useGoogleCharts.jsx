@@ -1,3 +1,6 @@
+// Blog post: https://blog.shahednasser.com/how-to-use-google-charts-in-react/
+// Copied from here: https://github.com/shahednasser/react-google-charts-tutorial/blob/master/src/WithHooks/useGoogleCharts.js
+
 import { useEffect, useState } from "react";
 
 function useGoogleCharts() {

@@ -6,7 +6,10 @@
 /dist
 
 # authentication
-scripts/serviceAccountKey.json
+scripts/service-account-key.json
 
 # debug
 src/assets/images/debug
+
+# local development
+/local-dev

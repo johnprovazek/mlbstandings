@@ -1,20 +1,32 @@
 {
-  "pylint.args": ["--rcfile=scrape/.pylintrc"],
+  "pylint.args": ["--rcfile=scripts/.pylintrc"],
   "search.exclude": {
     "local-dev/": true
   },
   "cSpell.words": [
+    "appspot",
     "Astros",
+    "clickme",
+    "corechart",
+    "Difgwhqm",
     "epochdate",
+    "EZBTG",
+    "firebaseapp",
     "firebasekey",
     "firestore",
+    "gamesback",
     "gridlines",
     "johnprovazek",
+    "levelname",
     "maxgames",
     "maxwinloss",
     "Mets",
     "mlbstandings",
     "Phillies",
-    "predeploy"
+    "predeploy",
+    "statsapi",
+    "STRK",
+    "uidotdev",
+    "usehooks"
   ]
 }

@@ -1,0 +1,16 @@
+.main-title {
+  text-align: center;
+  color: var(--white);
+  font-size: 36px;
+  line-height: 36px;
+  padding-top: 36px;
+  padding-bottom: 16px;
+  margin: 0px;
+}
+
+.main-title-github-svg {
+  height: 36px;
+  width: 36px;
+  line-height: 36px;
+  vertical-align: bottom;
+}

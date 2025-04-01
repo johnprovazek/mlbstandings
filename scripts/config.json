@@ -1,0 +1,81 @@
+{
+  "leagueIds": ["103", "104"],
+  "divisionMap": {
+    "200": "ALW",
+    "201": "ALE",
+    "202": "ALC",
+    "203": "NLW",
+    "204": "NLE",
+    "205": "NLC"
+  },
+  "teamMap": {
+    "108": { "color": "#BA0021", "division": "ALW", "code": "LAA" },
+    "109": { "color": "#A71930", "division": "NLW", "code": "ARI" },
+    "110": { "color": "#DF4601", "division": "ALE", "code": "BAL" },
+    "111": { "color": "#BD3039", "division": "ALE", "code": "BOS" },
+    "112": { "color": "#0E3386", "division": "NLC", "code": "CHC" },
+    "113": { "color": "#000000", "division": "NLC", "code": "CIN" },
+    "114": { "color": "#E31937", "division": "ALC", "code": "CLE" },
+    "115": { "color": "#33006F", "division": "NLW", "code": "COL" },
+    "116": { "color": "#FA4616", "division": "ALC", "code": "DET" },
+    "117": { "color": "#EB6E1F", "division": "ALW", "code": "HOU" },
+    "118": { "color": "#BD9B60", "division": "ALC", "code": "KCR" },
+    "119": { "color": "#005A9C", "division": "NLW", "code": "LAD" },
+    "120": { "color": "#AB0003", "division": "NLE", "code": "WSH" },
+    "121": { "color": "#FF5910", "division": "NLE", "code": "NYM" },
+    "133": { "color": "#EFB21E", "division": "ALW", "code": "ATH" },
+    "134": { "color": "#FDB827", "division": "NLC", "code": "PIT" },
+    "135": { "color": "#FFC425", "division": "NLW", "code": "SDP" },
+    "136": { "color": "#005C5C", "division": "ALW", "code": "SEA" },
+    "137": { "color": "#FD5A1E", "division": "NLW", "code": "SFG" },
+    "138": { "color": "#C41E3A", "division": "NLC", "code": "STL" },
+    "139": { "color": "#8FBCE6", "division": "ALE", "code": "TBR" },
+    "140": { "color": "#003278", "division": "ALW", "code": "TEX" },
+    "141": { "color": "#134A8E", "division": "ALE", "code": "TOR" },
+    "142": { "color": "#002B5C", "division": "ALC", "code": "MIN" },
+    "143": { "color": "#002D72", "division": "NLE", "code": "PHI" },
+    "144": { "color": "#EAAA00", "division": "NLE", "code": "ATL" },
+    "145": { "color": "#27251F", "division": "ALC", "code": "CWS" },
+    "146": { "color": "#00A3E0", "division": "NLE", "code": "MIA" },
+    "147": { "color": "#0C2340", "division": "ALE", "code": "NYY" },
+    "158": { "color": "#12284B", "division": "NLC", "code": "MIL" }
+  },
+  "asterisk": {
+    "2024": {
+      "ALW": "Astros game on September 29th cancelled due to rain.",
+      "ALC": "Guardians game on September 29th cancelled due to rain."
+    },
+    "2021": {
+      "NLW": "Rockies game on September 16th cancelled due to rain.",
+      "NLE": "Braves game on September 16th cancelled due to rain."
+    },
+    "2020": {
+      "ALW": "Shortened season due to COVID-19 pandemic.",
+      "ALC": "Shortened season due to COVID-19 pandemic. Tigers double-header on August 13th cancelled due to COVID-19.",
+      "ALE": "Shortened season due to COVID-19 pandemic.",
+      "NLW": "Shortened season due to COVID-19 pandemic.",
+      "NLC": "Shortened season due to COVID-19 pandemic. Cardinals double-header on August 13th cancelled due to COVID-19.",
+      "NLE": "Shortened season due to COVID-19 pandemic."
+    },
+    "2019": {
+      "ALC": "White Sox vs. Tigers game on September 27th cancelled due to rain."
+    },
+    "2018": {
+      "NLW": "Dodgers and Rockies played 163rd regular season game on October 1st.",
+      "NLC": "Pirates game on September 9th cancelled due to rain. Cubs and Brewers played 163rd regular season game on October 1st.",
+      "NLE": "Marlins game on September 9th cancelled due to rain."
+    },
+    "2016": {
+      "ALC": "Tigers vs. Indians game on October 3rd cancelled due to rain.",
+      "NLC": "Pirates vs. Cubs game on September 29th scored a tie due to rain.",
+      "NLE": "Marlins vs. Braves game on September 25th cancelled due to tragedy."
+    },
+    "2015": {
+      "ALC": "Tigers vs. Indians game on September 12th cancelled due to rain."
+    },
+    "2013": {
+      "ALW": "Rangers played 163rd regular season wildcard tie-breaker game on September 30th.",
+      "ALE": "Rays played 163rd regular season wildcard tie-breaker game on September 30th."
+    }
+  }
+}

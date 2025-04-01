@@ -1,0 +1,59 @@
+.standings-table {
+  container-type: inline-size;
+}
+
+.standings-table-padded {
+  padding: 6.125%;
+  text-align: center;
+}
+
+.standings-table table {
+  width: 100%;
+  table-layout: fixed;
+  border-spacing: 0;
+  font-size: 1.66666667cqw;
+}
+
+.standings-table tr {
+  background-color: var(--light-grey);
+}
+
+.standings-table th {
+  height: 3cqw;
+  padding: 0.22222222cqw;
+  background-color: var(--dark-grey);
+}
+
+.standings-table td {
+  padding: 0.94444444cqw;
+  border-bottom: 0.11111111cqw solid var(--dark-grey);
+}
+
+.standings-table tr:last-child td {
+  border-bottom: none;
+}
+
+.standings-table th.standings-table-team-name {
+  width: 30%;
+}
+
+.standings-table-logo-text-cell {
+  display: flex;
+  align-items: center;
+}
+
+.standings-table-logo-text-cell img {
+  height: 4cqw;
+  width: 4cqw;
+  vertical-align: middle;
+  border: solid;
+  border-width: 0.5cqw;
+  border-radius: 0.5cqw;
+  background-color: white;
+  margin-right: 0.5cqw;
+}
+
+.standings-table-logo-text-cell span {
+  flex-grow: 1;
+  text-align: center;
+}

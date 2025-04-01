@@ -1,0 +1,22 @@
+.loading-box {
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6.125%;
+}
+
+.loading-box > div {
+  height: 100%;
+  width: 100%;
+  background-color: var(--light-grey);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-box > div > img {
+  height: auto;
+  max-height: 80%;
+  width: 18%;
+  aspect-ratio: 1;
+}

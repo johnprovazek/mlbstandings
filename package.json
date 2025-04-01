@@ -11,7 +11,9 @@
     "preview:host": "vite preview --host"
   },
   "dependencies": {
-    "firebase": "^10.12.4",
+    "@tanstack/react-query": "^5.66.9",
+    "@uidotdev/usehooks": "^2.4.1",
+    "firebase": "^11.3.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -26,6 +28,6 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
     "prettier": "^3.3.3",
-    "vite": "^5.3.4"
+    "vite": "^6.2.0"
   }
 }

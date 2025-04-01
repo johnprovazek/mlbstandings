@@ -1,0 +1,42 @@
+.chart-component {
+  height: 100%;
+  width: 100%;
+  font-family: Arial;
+  container-type: inline-size;
+}
+
+.chart-title {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0;
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* There will be clipping on small screens with the min at 16px */
+  font-size: clamp(16px, 2.5cqw, 24px);
+}
+
+.google-chart-container {
+  position: relative;
+  height: 90%;
+  width: 100%;
+}
+
+.google-chart {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+.team-logo {
+  height: auto;
+  width: 4%;
+  aspect-ratio: 1;
+  position: absolute;
+  background-color: var(--white);
+  border: solid;
+  border-width: 0.5cqw;
+  border-radius: 0.5cqw;
+  transform: translateY(-50%);
+}

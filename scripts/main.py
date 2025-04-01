@@ -1,215 +1,196 @@
-"""main.py pulls MLB standings data from baseball-reference.com and adds it to a Firebase Firestore database. """
+"""main.py pulls and formats MLB standings data from statsapi.mlb.com adding it to a Firebase Firestore database. """
 
-# The function entry point in a Google Cloud Function must come from a file named "main.py".
-# Bot limit reference page: https://www.sports-reference.com/bot-traffic.html.
-
-from datetime import date
-import math
+import json
 import time
-from bs4 import BeautifulSoup
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+import math
+import sys
+from datetime import datetime, date
+import logging
 import requests
+import firebase_admin
+from firebase_admin import credentials, firestore
 
+# pylint: disable=W0613
+# pylint: disable=E1126
+# pylint: disable=R0914
+# pylint: disable=R0912
 
-# Function arguments aren't used. They need to be there when ran as a Google Cloud Function.
+CONFIG_FILE = "config.json"
+SERVICE_ACCOUNT_KEY = "service-account-key.json"
+API_TIMEOUT = 10
+API_BASE_URL = "https://statsapi.mlb.com/api/v1/"
+GAME_STATUS_FINISHED = "F"
+GAME_TYPE_REGULAR_SEASON = "R"
+SPORT_ID_MLB = "1"
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def load_config():
+    """Loads and returns the configuration data."""
+    try:
+        with open(CONFIG_FILE, 'r', encoding="utf-8") as file:
+            return json.load(file)
+    except FileNotFoundError:
+        logging.error("Config file %s not found.", CONFIG_FILE)
+        sys.exit(1)
+    except json.JSONDecodeError:
+        logging.error("Error decoding JSON in %s.", CONFIG_FILE)
+        sys.exit(1)
+
+def get_record_by_type(split_records_list: list, record_type: str):
+    """Gets record by type."""
+    for split_record in split_records_list:
+        if split_record.get("type") == record_type:
+            return f"{split_record["wins"]}-{split_record["losses"]}"
+    return ""
+
+def get_result_addend(team_data: dict):
+    """Determines the addend for the result of a game (Win, Loss, or Tie)."""
+    if team_data.get("isWinner") is True:
+        return 1
+    if team_data.get("isWinner") is False:
+        return -1
+    return 0
+
+def filtered_game_data(game: dict):
+    """Filters game data to only relevant data"""
+    game_data = {}
+    for location in ["home", "away"]:
+        game_data[location] = {
+            "team_id": str(game["teams"][location]["team"]["id"]),
+            "resultAddend": get_result_addend(game["teams"][location])
+        }
+    return game_data
+
+def fetch_standings_data(league_id: int, season_year: int) -> dict:
+    """Fetches standings data from the MLB API."""
+    url = f"{API_BASE_URL}standings/?leagueId={league_id}&season={season_year}"
+    try:
+        response = requests.get(url, timeout=API_TIMEOUT)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        logging.error("Error fetching standings data: %s", error)
+        sys.exit(1)
+
+def fetch_games_data(season_year: int) -> dict:
+    """Fetches games data from the MLB API."""
+    url = f"{API_BASE_URL}schedule/?sportId={SPORT_ID_MLB}&gameTypes={GAME_TYPE_REGULAR_SEASON}&season={season_year}"
+    try:
+        response = requests.get(url, timeout=API_TIMEOUT)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as error:
+        logging.error("Error fetching games data: %s", error)
+        sys.exit(1)
+
+def get_streak_code(team):
+    """Retrieves the streak code from a team's data, or returns '-' if not available."""
+    if "streak" in team and "streakCode" in team["streak"]:
+        return team["streak"]["streakCode"]
+    return "-"
+
+def get_game_date(game):
+    """Gets and formats the game date."""
+    return datetime.strptime(game["gameDate"], DATE_FORMAT)
+
 def update(arg0, arg1):
-    """Pulls MLB standings data from baseball-reference.com and adds it to a Firebase Firestore database."""
-    league_dict = {
-        "year": date.today().year,
-        "epochdate": int(time.time()),
-        "maxwinloss": "",
-        "maxgames": "",
+    """Updates Firebase with MLB standings data."""
+    config = load_config()
+    season_year = 2025
+    firebase_season_data = {
+        "year": season_year,
+        "epochDate": int(time.time()),
+        "maxWinLoss": 0,
+        "maxGames": 0,
         "divisions": {
-            "ALW": {
-                "teams": {
-                    "SEA": {"scores": [0], "rank": 0, "color": "#005C5C"},
-                    "HOU": {"scores": [0], "rank": 0, "color": "#EB6E1F"},
-                    "LAA": {"scores": [0], "rank": 0, "color": "#BA0021"},
-                    "OAK": {"scores": [0], "rank": 0, "color": "#EFB21E"},
-                    "TEX": {"scores": [0], "rank": 0, "color": "#003278"},
-                },
-                "asterisk": "",
-            },
-            "ALC": {
-                "teams": {
-                    "KCR": {"scores": [0], "rank": 0, "color": "#BD9B60"},
-                    "CHW": {"scores": [0], "rank": 0, "color": "#27251F"},
-                    "DET": {"scores": [0], "rank": 0, "color": "#FA4616"},
-                    "MIN": {"scores": [0], "rank": 0, "color": "#002B5C"},
-                    "CLE": {"scores": [0], "rank": 0, "color": "#E31937"},
-                },
-                "asterisk": "",
-            },
-            "ALE": {
-                "teams": {
-                    "NYY": {"scores": [0], "rank": 0, "color": "#0C2340"},
-                    "TOR": {"scores": [0], "rank": 0, "color": "#134A8E"},
-                    "TBR": {"scores": [0], "rank": 0, "color": "#8FBCE6"},
-                    "BAL": {"scores": [0], "rank": 0, "color": "#DF4601"},
-                    "BOS": {"scores": [0], "rank": 0, "color": "#BD3039"},
-                },
-                "asterisk": "",
-            },
-            "NLW": {
-                "teams": {
-                    "SDP": {"scores": [0], "rank": 0, "color": "#FFC425"},
-                    "LAD": {"scores": [0], "rank": 0, "color": "#005A9C"},
-                    "SFG": {"scores": [0], "rank": 0, "color": "#FD5A1E"},
-                    "COL": {"scores": [0], "rank": 0, "color": "#33006F"},
-                    "ARI": {"scores": [0], "rank": 0, "color": "#A71930"},
-                },
-                "asterisk": "",
-            },
-            "NLC": {
-                "teams": {
-                    "STL": {"scores": [0], "rank": 0, "color": "#C41E3A"},
-                    "CHC": {"scores": [0], "rank": 0, "color": "#0E3386"},
-                    "CIN": {"scores": [0], "rank": 0, "color": "#000000"},
-                    "MIL": {"scores": [0], "rank": 0, "color": "#12284B"},
-                    "PIT": {"scores": [0], "rank": 0, "color": "#FDB827"},
-                },
-                "asterisk": "",
-            },
-            "NLE": {
-                "teams": {
-                    "NYM": {"scores": [0], "rank": 0, "color": "#FF5910"},
-                    "PHI": {"scores": [0], "rank": 0, "color": "#002D72"},
-                    "ATL": {"scores": [0], "rank": 0, "color": "#EAAA00"},
-                    "MIA": {"scores": [0], "rank": 0, "color": "#00A3E0"},
-                    "WSN": {"scores": [0], "rank": 0, "color": "#AB0003"},
-                },
-                "asterisk": "",
-            },
-        },
+            "ALW": [],
+            "ALC": [],
+            "ALE": [],
+            "NLW": [],
+            "NLC": [],
+            "NLE": []
+        }
     }
-
-    team_name_dict = {
-        "Los Angeles Angels": "LAA",
-        "Los Angeles Angels of Anaheim": "LAA",
-        "Texas Rangers": "TEX",
-        "Houston Astros": "HOU",
-        "Oakland Athletics": "OAK",
-        "Seattle Mariners": "SEA",
-        "Cleveland Guardians": "CLE",
-        "Cleveland Indians": "CLE",
-        "Minnesota Twins": "MIN",
-        "Chicago White Sox": "CHW",
-        "Detroit Tigers": "DET",
-        "Kansas City Royals": "KCR",
-        "Tampa Bay Rays": "TBR",
-        "New York Yankees": "NYY",
-        "Toronto Blue Jays": "TOR",
-        "Baltimore Orioles": "BAL",
-        "Boston Red Sox": "BOS",
-        "Los Angeles Dodgers": "LAD",
-        "San Francisco Giants": "SFG",
-        "Arizona Diamondbacks": "ARI",
-        "Colorado Rockies": "COL",
-        "San Diego Padres": "SDP",
-        "Milwaukee Brewers": "MIL",
-        "Pittsburgh Pirates": "PIT",
-        "Cincinnati Reds": "CIN",
-        "Chicago Cubs": "CHC",
-        "St. Louis Cardinals": "STL",
-        "Atlanta Braves": "ATL",
-        "Miami Marlins": "MIA",
-        "New York Mets": "NYM",
-        "Philadelphia Phillies": "PHI",
-        "Washington Nationals": "WSN",
-    }
-
-    # Getting the division rankings.
-    league_identifiers = ["NL", "AL"]
-    division_identifiers = ["W", "C", "E"]
-    for l_i in league_identifiers:
-        league_url = "https://www.baseball-reference.com/leagues/" + l_i + "/" + str(league_dict["year"]) + ".shtml"
-        req = requests.get(league_url, timeout=10)
-        soup = BeautifulSoup(req.content, "html.parser")
-        for d_i in division_identifiers:
-            division_table = soup.find("table", id="standings_" + d_i).select_one("tbody")
-            division_rows = division_table.findAll("tr")
-            for ranking, row in enumerate(division_rows):
-                team_name = row.select_one("th")["csk"]
-                team_code = team_name_dict[team_name]
-                league_dict["divisions"][l_i + d_i]["teams"][team_code]["rank"] = ranking
-
-    # Getting the win/loss changes.
-    max_win_loss_tracker = 0
-    max_games_tracker = 0
-    for division_code in league_dict["divisions"]:
-        for team_code in league_dict["divisions"][division_code]["teams"]:
-            time.sleep(4)  # Limits requests to not be flagged as a bot.
-            url = (
-                "https://www.baseball-reference.com/teams/"
-                + team_code
-                + "/"
-                + str(league_dict["year"])
-                + "-schedule-scores.shtml"
-            )
-            req = requests.get(url, timeout=10)
-            soup = BeautifulSoup(req.content, "html.parser")
-            schedule_table = soup.find("table", id="team_schedule")
-            rows = schedule_table.findAll("tr")
-            win_loss_tracker = 0
-            game_counter = 0
-            for row in rows:
-                game_number = row.find(attrs={"data-stat": "team_game"}).contents[0]
-                if game_number != "Gm#":
-                    win_loss_element = row.find(attrs={"data-stat": "win_loss_result"})
-                    if win_loss_element is not None:
-                        win_loss_char = win_loss_element.contents[0][0]
-                        if win_loss_char == "W":
-                            win_loss_tracker = win_loss_tracker + 1
-                            if abs(win_loss_tracker) > max_win_loss_tracker:
-                                max_win_loss_tracker = abs(win_loss_tracker)
-                            game_counter = game_counter + 1
-                        elif win_loss_char == "L":
-                            win_loss_tracker = win_loss_tracker - 1
-                            if abs(win_loss_tracker) > max_win_loss_tracker:
-                                max_win_loss_tracker = abs(win_loss_tracker)
-                            game_counter = game_counter + 1
-                        else:
-                            print("error with W/L scraping with: " + team_code)
-                        league_dict["divisions"][division_code]["teams"][team_code]["scores"].append(win_loss_tracker)
-                    else:
-                        break
-            if game_counter > max_games_tracker:
-                max_games_tracker = game_counter
-
+    # Getting standings data.
+    team_rankings = {}
+    for league_id in config["leagueIds"]:
+        standings_data = fetch_standings_data(league_id, firebase_season_data["year"])
+        for record in standings_data["records"]:
+            division = config["divisionMap"][str(record["division"]["id"])]
+            standings = []
+            for rank, team in enumerate(record["teamRecords"]):
+                team_id = str(team["team"]["id"])
+                team_rankings[team_id] = rank
+                standings.append({
+                    "code": config["teamMap"][team_id]["code"],
+                    "color": config["teamMap"][team_id]["color"],
+                    "scores": [0],
+                    "table": {
+                        "rank": str(rank + 1),
+                        "name": team["team"]["name"],
+                        "wins": str(team["wins"]),
+                        "losses": str(team["losses"]),
+                        "winPercentage": team["winningPercentage"],
+                        "gamesBack": team["divisionGamesBack"],
+                        "streak": get_streak_code(team),
+                        "homeRecord": get_record_by_type(team["records"]["splitRecords"], "home"),
+                        "roadRecord": get_record_by_type(team["records"]["splitRecords"], "away"),
+                        "lastTenRecord": get_record_by_type(team["records"]["splitRecords"], "lastTen"),
+                    }
+                })
+            firebase_season_data["divisions"][division] = {
+                "asterisk": "",
+                "standings": standings
+            }
+    # Getting game win/loss data
+    completed_games = []
+    completed_game_ids = set()
+    max_games_counter = 0
+    max_win_loss_counter = 0
+    games_data = fetch_games_data(season_year)
+    # Parsing in reverse order to keep the most recent game in circumstance where games have duplicate game ids.
+    for game_date in  reversed(games_data["dates"]):
+        # Sorting games by time to align double headers correctly.
+        sorted_games = sorted(game_date["games"], key=get_game_date, reverse=True)
+        for game in sorted_games:
+            game_id = game["gamePk"]
+            if game["status"]["codedGameState"] == GAME_STATUS_FINISHED and game_id not in completed_game_ids:
+                completed_games.append(filtered_game_data(game))
+                completed_game_ids.add(game_id)
+    # Getting team scores list.
+    for complete_game in reversed(completed_games):
+        for location in ["home", "away"]:
+            team_id = complete_game[location]["team_id"]
+            team_division = config["teamMap"][team_id]["division"]
+            team_rank = team_rankings[team_id]
+            scores = firebase_season_data["divisions"][team_division]["standings"][team_rank]["scores"]
+            score_tracker = scores[-1] + complete_game[location]["resultAddend"]
+            scores.append(score_tracker)
+            scores_counter = len(scores) - 1
+            max_games_counter = max(scores_counter, max_games_counter)
+            max_win_loss_counter = max(abs(score_tracker), max_win_loss_counter)
     # Setting the chart max x and y values.
-    if max_games_tracker >= 162:  # Completed regular season.
-        league_dict["maxwinloss"] = 90
-        league_dict["maxgames"] = 180
-    elif league_dict["year"] == 2020:  # Short COVID season.
-        league_dict["maxwinloss"] = 30
-        league_dict["maxgames"] = 70
-    elif league_dict["year"] == date.today().year:  # Current season still in progress.
-        league_dict["maxwinloss"] = math.ceil(max_win_loss_tracker / 8) * 10
-        league_dict["maxgames"] = math.ceil(max_games_tracker / 9) * 10
-
+    if max_games_counter >= 162: # Completed regular season.
+        firebase_season_data["maxWinLoss"] = 90
+        firebase_season_data["maxGames"] = 180
+    elif firebase_season_data["year"] == 2020: # Short COVID season.
+        firebase_season_data["maxWinLoss"] = 30
+        firebase_season_data["maxGames"] = 70
+    elif firebase_season_data["year"] == date.today().year: # Current season still in progress.
+        firebase_season_data["maxWinLoss"] = math.ceil(max_win_loss_counter / 8) * 10
+        firebase_season_data["maxGames"] = math.ceil(max_games_counter / 9) * 10
     # Setting asterisk values.
-    if league_dict["year"] == 2020:
-        for division_code in league_dict["divisions"]:
-            league_dict["divisions"][division_code]["asterisk"] = "* Shortened season due to the COVID-19 pandemic"
-    elif league_dict["year"] == 2016:
-        league_dict["divisions"]["NLC"]["asterisk"] = "* Cubs vs. Pirates game played on 9/29/2016 scored a Tie"
-    elif league_dict["year"] == 2013:
-        league_dict["divisions"]["ALE"]["asterisk"] = "* Rays and Rangers played 163rd regular season game on 9/30/2013"
-        league_dict["divisions"]["ALW"]["asterisk"] = "* Rays and Rangers played 163rd regular season game on 9/30/2013"
-    elif league_dict["year"] == 2018:
-        league_dict["divisions"]["NLC"]["asterisk"] = "* Cubs and Brewers played 163rd regular season game on 10/1/2018"
-        league_dict["divisions"]["NLW"][
-            "asterisk"
-        ] = "* Dodgers and Rockies played 163rd regular season game on 10/1/2018"
-
+    for division_key, firebase_division in firebase_season_data["divisions"].items():
+        year = str(firebase_season_data["year"])
+        if year in config["asterisk"] and division_key in config["asterisk"][year]:
+            firebase_division["asterisk"] = "* " + config["asterisk"][year][division_key]
     # Updating Firebase.
-    cred = credentials.Certificate("serviceAccountKey.json")
+    cred = credentials.Certificate(SERVICE_ACCOUNT_KEY)
     firebase_admin.initialize_app(cred)
     db = firestore.client()
-    db.collection("seasons").document(str(league_dict["year"])).set(league_dict)
-
+    db.collection("seasons").document(str(firebase_season_data["year"])).set(firebase_season_data)
 
 # Remove when ran as Google Cloud Function.
 update("", "")
