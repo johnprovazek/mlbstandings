@@ -12,7 +12,7 @@ Built using React, Vite, Python, Google Charts, Google Cloud Functions, and Fire
 
 <div align="center">
   <picture>
-    <img src="https://repository-images.githubusercontent.com/483421754/ce78b600-adcd-445a-80cc-8236060bc43e" width="830px">
+    <img src="https://repository-images.githubusercontent.com/483421754/1a02c8c4-9da0-4668-bd1c-2abd326bab86" width="830px">
   </picture>
 </div>
 

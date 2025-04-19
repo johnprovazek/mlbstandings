@@ -98,7 +98,7 @@ def get_game_date(game):
 def update(arg0, arg1):
     """Updates Firebase with MLB standings data."""
     config = load_config()
-    season_year = 2025
+    season_year = date.today().year
     firebase_season_data = {
         "year": season_year,
         "epochDate": int(time.time()),
