@@ -17,12 +17,17 @@ function useGoogleCharts() {
         script.onload = () => {
           if (window.google && window.google.charts) {
             window.google.charts.load("current", { packages: ["corechart"] });
-
-            window.google.charts.setOnLoadCallback(() => setGoogle(window.google));
+            window.google.charts.setOnLoadCallback(() =>
+              setGoogle(window.google),
+            );
           }
         };
         head.appendChild(script);
-      } else if (window.google && window.google.charts && window.google.visualization) {
+      } else if (
+        window.google &&
+        window.google.charts &&
+        window.google.visualization
+      ) {
         setGoogle(window.google);
       }
     }

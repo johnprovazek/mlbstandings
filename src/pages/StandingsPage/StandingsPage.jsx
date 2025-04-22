@@ -8,7 +8,7 @@ import Title from "../../components/Title/Title.jsx";
 import LoadingSVG from "../../assets/images/loading.svg";
 import MLBChartOptions from "../../assets/data/mlb-chart-options.json";
 import UnavailableSVG from "../../assets/images/unavailable.svg";
-import useFirebaseStandings from "../../hooks/useFirebaseStandings.jsx";
+import useFirebaseStandings from "../../hooks/useFirebaseStandings.js";
 import { useLocalStorage } from "@uidotdev/usehooks";
 import { epochToDateString } from "../../lib/utils.js";
 import {

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useMemo } from "react";
 import LoadingBox from "../../components/LoadingBox/LoadingBox.jsx";
-import useGoogleCharts from "../../hooks/useGoogleCharts.jsx";
+import useGoogleCharts from "../../hooks/useGoogleCharts.js";
 import { transformDataDashed, getLogoCoords } from "../../lib/utils.js";
 import {
   TRANSPARENT_IMAGE_URI,
